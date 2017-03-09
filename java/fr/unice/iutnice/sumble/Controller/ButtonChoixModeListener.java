@@ -32,9 +32,11 @@ public class ButtonChoixModeListener implements View.OnClickListener {
         if(v == gameMenu.getChallenge()){
             gameMenu.setBackgroundChallenge(R.drawable.backgroundbuttonvert);
             gameMenu.setBackgroundLimitless(R.drawable.backgroundbuttongris);
+            gameMenu.setLimitlessChoisi(false);
         }else if(v == gameMenu.getLimitless()) {
             gameMenu.setBackgroundChallenge(R.drawable.backgroundbuttongris);
             gameMenu.setBackgroundLimitless(R.drawable.backgroundbuttonvert);
+            gameMenu.setLimitlessChoisi(true);
         }
 
         //Animation fadeIn = new AlphaAnimation(0,1);

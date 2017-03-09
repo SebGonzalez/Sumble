@@ -52,6 +52,7 @@ public class GameMenu extends Fragment{
     private RadioButton moyen;
     private RadioButton difficile;
 
+    private boolean limitlessChoisi;
     private int checkedDiff;
 
     public static GameMenu newInstance() {
@@ -88,11 +89,8 @@ public class GameMenu extends Fragment{
         radioGroup.setOnCheckedChangeListener(radioButtonListener);
 
         facile = (RadioButton)view.findViewById(R.id.facile);
-        facile.setId(R.id.facile);
         moyen = (RadioButton)view.findViewById(R.id.moyen);
-
         difficile = (RadioButton)view.findViewById(R.id.difficile);
-        difficile.setTag("d");
 
         lancerPartie = (Button)view.findViewById(R.id.lancerPartie);
         lancerPartie.setVisibility(View.INVISIBLE);
@@ -161,5 +159,9 @@ public class GameMenu extends Fragment{
 
     public RadioButton getDifficile() {
         return difficile;
+    }
+
+    public void setLimitlessChoisi(boolean valeur){
+        limitlessChoisi = valeur;
     }
 }
