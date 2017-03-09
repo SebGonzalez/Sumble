@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Sumble</string>
+    <string name="param">Paramètres</string>
+    <string name="score">Score</string>
+    <string name="modeDeJeuTitre">Sélectionnez un mode de jeu</string>
+    <string name="limitless">Limitless</string>
+    <string name="challenge">Challenge</string>
+    <string name="choixDiff">Choisissez la difficulté</string>
+    <string name="facile">Facile</string>
+    <string name="intermediaire">Intermédiaire</string>
+    <string name="difficile">Difficile</string>
+    <string name="lancerPartie">Lancer la partie</string>
 </resources>
