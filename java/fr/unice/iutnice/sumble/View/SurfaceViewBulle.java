@@ -8,11 +8,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
@@ -59,18 +60,74 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         canvas.drawBitmap(backgroundResize, 0, 0, paint);
 
 
-       // for(Bulle bulle : bulleFactory.getListeBulle()) {
-            canvas.drawBitmap( bulleFactory.getListeBulle().get(0).getImg().getBitmap(),  bulleFactory.getListeBulle().get(0).getX(),  bulleFactory.getListeBulle().get(0).getY(), paint);
-           // paint.setTextSize( bulleFactory.getListeBulle().get(0).getLargeur()/2);
-            //canvas.drawText(""+ bulleFactory.getListeBulle().get(0).getValeur(),  bulleFactory.getListeBulle().get(0).getX() +  bulleFactory.getListeBulle().get(0).getLargeur()/2-paint.getTextSize()/2,  bulleFactory.getListeBulle().get(0).getY() +  bulleFactory.getListeBulle().get(0).getLargeur()/2, paint);
-       // }
+        for(Bulle bulle : bulleFactory.getListeBulle()) {
+            canvas.drawBitmap(bulle.getImg().getBitmap(), bulle.getX(),  bulle.getY(), paint);
+            paint.setTextSize( bulle.getLargeur());
+            canvas.drawText(""+ bulle.getValeur(),  bulle.getX()+(bulle.getLargeur()/4) ,  bulle.getY()+bulle.getLargeur(), paint);
+        }
+    }
+
+    public void genererBulle() {
+
+        Bulle bulle = new Bulle(this.getContext(), metrics);
+
+        Random random = new Random();
+        int y = random.nextInt(5000);
+        if (y < 600) {
+            Random rand = new Random();
+
+            int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
+            bulle.setX(x);
+
+            if (bulleFactory.getListeBulle().size() > 0) {
+                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()))
+                    bulleFactory.getListeBulle().add(bulle);
+                else {
+                    return;
+                }
+            } else {
+                bulleFactory.getListeBulle().add(bulle);
+            }
+        }
+        else {
+            return;
+        }
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int currentX = (int)event.getX();
+        int currentY = (int)event.getY();
+
+        switch (event.getAction()) {
+
+            // code exécuté lorsque le doigt touche l'écran.
+            case MotionEvent.ACTION_DOWN:
+                // si le doigt touche une bulle :
+                for (int i = 0; i < bulleFactory.getListeBulle().size(); i++) {
+
+                    //si les coordonnées du toucher correspondent à la position de la bulle
+                    if (currentX >= bulleFactory.getListeBulle().get(i).getX() &&
+                            currentX <= bulleFactory.getListeBulle().get(i).getX() + bulleFactory.getListeBulle().get(i).getLargeur() &&
+                            currentY >= bulleFactory.getListeBulle().get(i).getY() && currentY <= bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur()) {
+                        //on supprime la bulle
+                        bulleFactory.getListeBulle().remove(i);
+                        //score++;
+
+                        break;
+                    }
+                }
+        }
+
+        return true;  // On retourne "true" pour indiquer qu'on a géré l'évènement
     }
 
     public void update() {
-        bulleFactory.getListeBulle().get(0).deplacementY(ConversionDpPixel.dpToPx(5));
-        /*for(Bulle bulle : bulleFactory.getListeBulle()) {
+        genererBulle();
+        for(Bulle bulle : bulleFactory.getListeBulle()) {
             bulle.deplacementY(ConversionDpPixel.dpToPx(5));
-        }*/
+        }
     }
 
     @Override
@@ -122,7 +179,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                     // On s'assure qu'aucun autre thread n'accède au holder
                     synchronized (mSurfaceHolder) {
                         //on déplace la bulle
-                        //update();
+                        update();
                         // Et on dessine
                         onDraw(canvas);
                     }
