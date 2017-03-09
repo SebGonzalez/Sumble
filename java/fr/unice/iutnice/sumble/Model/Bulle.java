@@ -10,6 +10,7 @@ import android.text.BoringLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.R;
 
 /**
@@ -30,11 +31,10 @@ public class Bulle {
 
     public Bulle(Context c, DisplayMetrics m) {
         metrics = m;
-        Log.v("Bule : ", "" +  metrics.widthPixels);
         valeur = (int)Math.random()*20;
         largeur = metrics.widthPixels/5;
         x = metrics.widthPixels/2;
-        y = metrics.heightPixels/2;
+        y = 50;
         this.c=c;
         img = setImage(c, R.drawable.bulle);
     }
@@ -66,11 +66,16 @@ public class Bulle {
     }
 
     public void deplacementY(int valeur) {
-        this.y += valeur;
+        if(y+largeur <= metrics.heightPixels - ConversionDpPixel.dpToPx(25))
+            this.y += valeur;
     }
 
     public int getX() {
         return x;
+    }
+
+    public void setX(int valeur) {
+        this.x = valeur;
     }
 
     public BitmapDrawable getImg() {
