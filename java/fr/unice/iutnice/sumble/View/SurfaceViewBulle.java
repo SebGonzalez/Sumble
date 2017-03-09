@@ -21,6 +21,7 @@ import fr.unice.iutnice.sumble.R;
 
 import static android.R.attr.x;
 import static android.R.attr.y;
+import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
 /**
  * Created by gonzo on 07/03/2017.
@@ -53,21 +54,23 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     @Override
     protected void onDraw(Canvas canvas) {
 
-        canvas.drawBitmap(backgroundResize, 0, 0, null);
+        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
-        Paint paint = new Paint();
+        canvas.drawBitmap(backgroundResize, 0, 0, paint);
 
-        for(Bulle bulle : bulleFactory.getListeBulle()) {
-            canvas.drawBitmap(bulle.getImg().getBitmap(), bulle.getX(), bulle.getY(), paint);
-            paint.setTextSize(bulle.getLargeur()/2);
-            canvas.drawText(""+bulle.getValeur(), bulle.getX() + bulle.getLargeur()/2-paint.getTextSize()/2, bulle.getY() + bulle.getLargeur()/2, paint);
-        }
+
+       // for(Bulle bulle : bulleFactory.getListeBulle()) {
+            canvas.drawBitmap( bulleFactory.getListeBulle().get(0).getImg().getBitmap(),  bulleFactory.getListeBulle().get(0).getX(),  bulleFactory.getListeBulle().get(0).getY(), paint);
+           // paint.setTextSize( bulleFactory.getListeBulle().get(0).getLargeur()/2);
+            //canvas.drawText(""+ bulleFactory.getListeBulle().get(0).getValeur(),  bulleFactory.getListeBulle().get(0).getX() +  bulleFactory.getListeBulle().get(0).getLargeur()/2-paint.getTextSize()/2,  bulleFactory.getListeBulle().get(0).getY() +  bulleFactory.getListeBulle().get(0).getLargeur()/2, paint);
+       // }
     }
 
     public void update() {
-        for(Bulle bulle : bulleFactory.getListeBulle()) {
+        bulleFactory.getListeBulle().get(0).deplacementY(ConversionDpPixel.dpToPx(5));
+        /*for(Bulle bulle : bulleFactory.getListeBulle()) {
             bulle.deplacementY(ConversionDpPixel.dpToPx(5));
-        }
+        }*/
     }
 
     @Override
@@ -77,7 +80,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundw);
         float scale = (float)background.getHeight()/(float)getHeight();
         int newWidth = Math.round(background.getWidth()/scale);
         int newHeight = Math.round(background.getHeight()/scale);
@@ -97,7 +100,9 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             try {
                 mThread.join();
                 joined = true;
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -117,7 +122,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                     // On s'assure qu'aucun autre thread n'accède au holder
                     synchronized (mSurfaceHolder) {
                         //on déplace la bulle
-                        update();
+                        //update();
                         // Et on dessine
                         onDraw(canvas);
                     }
