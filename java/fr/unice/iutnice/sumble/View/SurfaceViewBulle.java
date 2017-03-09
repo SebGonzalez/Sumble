@@ -122,7 +122,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                     // On s'assure qu'aucun autre thread n'accède au holder
                     synchronized (mSurfaceHolder) {
                         //on déplace la bulle
-                        //update();
+                        update();
                         // Et on dessine
                         onDraw(canvas);
                     }
