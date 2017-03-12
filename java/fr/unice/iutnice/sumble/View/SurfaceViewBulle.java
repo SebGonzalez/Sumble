@@ -62,8 +62,8 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             canvas.drawBitmap(bulle.getImg().getBitmap(), bulle.getX(),  bulle.getY(), paint);
-            paint.setTextSize( bulle.getLargeur());
-            canvas.drawText(""+ bulle.getValeur(),  bulle.getX()+(bulle.getLargeur()/4) ,  bulle.getY()+bulle.getLargeur(), paint);
+            paint.setTextSize( bulle.getLargeur()/2);
+            canvas.drawText(""+ bulle.getValeur(),  bulle.getX()+(bulle.getLargeur()/4) ,  bulle.getY()+bulle.getLargeur()/2, paint);
         }
     }
 
@@ -73,7 +73,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         Random random = new Random();
         int y = random.nextInt(5000);
-        if (y < 600) {
+        if (y < 500) {
             Random rand = new Random();
 
             int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
@@ -108,9 +108,10 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                 for (int i = 0; i < bulleFactory.getListeBulle().size(); i++) {
 
                     //si les coordonnées du toucher correspondent à la position de la bulle
-                    if (currentX >= bulleFactory.getListeBulle().get(i).getX() &&
+                    if (    currentX >= bulleFactory.getListeBulle().get(i).getX() &&
                             currentX <= bulleFactory.getListeBulle().get(i).getX() + bulleFactory.getListeBulle().get(i).getLargeur() &&
-                            currentY >= bulleFactory.getListeBulle().get(i).getY() && currentY <= bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur()) {
+                            currentY >= bulleFactory.getListeBulle().get(i).getY() &&
+                            currentY <= bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur()) {
                         //on supprime la bulle
                         bulleFactory.getListeBulle().remove(i);
                         //score++;
@@ -126,7 +127,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     public void update() {
         genererBulle();
         for(Bulle bulle : bulleFactory.getListeBulle()) {
-            bulle.deplacementY(ConversionDpPixel.dpToPx(5));
+            try {
+                bulle.deplacementY(ConversionDpPixel.dpToPx(5));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
