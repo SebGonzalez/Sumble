@@ -13,7 +13,7 @@ import fr.unice.iutnice.sumble.Model.Bulle;
 
 public class BulleFactory {
 
-    ArrayList<Bulle> listeBulle;
+    public static ArrayList<Bulle> listeBulle;
 
     public BulleFactory(Context c, DisplayMetrics metrics) {
         listeBulle = new ArrayList<>();
