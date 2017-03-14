@@ -9,6 +9,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 
@@ -30,11 +31,11 @@ public class RadioButtonListener implements RadioGroup.OnCheckedChangeListener{
         gameMenu.getLancerPartie().setVisibility(View.VISIBLE);
 
         if(group.getCheckedRadioButtonId() == gameMenu.getFacile().getId()){
-            gameMenu.setCheckedDiff(0);
+            gameMenu.setCheckedDiff(TypeDifficulte.Facile);
         }else if(group.getCheckedRadioButtonId() == gameMenu.getMoyen().getId()){
-            gameMenu.setCheckedDiff(1);
+            gameMenu.setCheckedDiff(TypeDifficulte.Moyen);
         }else if(group.getCheckedRadioButtonId() == gameMenu.getDifficile().getId()){
-            gameMenu.setCheckedDiff(2);
+            gameMenu.setCheckedDiff(TypeDifficulte.Difficile);
         }
     }
 }

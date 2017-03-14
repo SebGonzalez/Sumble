@@ -24,6 +24,7 @@ import org.xmlpull.v1.XmlPullParser;
 import fr.unice.iutnice.sumble.Controller.ButtonChoixModeListener;
 import fr.unice.iutnice.sumble.Controller.ButtonStartListener;
 import fr.unice.iutnice.sumble.Controller.RadioButtonListener;
+import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.MainActivity;
 
@@ -53,7 +54,7 @@ public class GameMenu extends Fragment{
     private RadioButton difficile;
 
     private boolean limitlessChoisi;
-    private int checkedDiff;
+    private TypeDifficulte checkedDiff;
 
     public static GameMenu newInstance() {
 
@@ -141,11 +142,11 @@ public class GameMenu extends Fragment{
         return lancerPartie;
     }
 
-    public void setCheckedDiff(int choix){
+    public void setCheckedDiff(TypeDifficulte choix){
         checkedDiff = choix;
     }
 
-    public int getCheckedDiff(){
+    public TypeDifficulte getCheckedDiff(){
         return checkedDiff;
     }
 
