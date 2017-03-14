@@ -28,7 +28,6 @@ public class ButtonChoixModeListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-
         if(v == gameMenu.getChallenge()){
             gameMenu.setBackgroundChallenge(R.drawable.backgroundbuttonvert);
             gameMenu.setBackgroundLimitless(R.drawable.backgroundbuttongris);
