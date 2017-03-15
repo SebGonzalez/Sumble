@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
+import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
+import fr.unice.iutnice.sumble.Model.Score;
+import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 import fr.unice.iutnice.sumble.View.GameActivity;
 import fr.unice.iutnice.sumble.View.MainActivity;
@@ -24,12 +27,19 @@ public class ButtonStartListener implements View.OnClickListener {
     public void onClick(View v) {
 
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
-        gameMenu.startActivity(intent);
         Log.v("checked diff", ""+gameMenu.getCheckedDiff());
+
         intent.putExtra("difficulte", gameMenu.getCheckedDiff());
         if(gameMenu.getLimitlessChoisi())
             intent.putExtra("mode", "Limitless");
         else
             intent.putExtra("mode", "Challenge");
+
+
+        //TEST - Score Parcelable : fonctionne
+      /*  Score score = new Score(22f, gameMenu.getCheckedDiff());
+        intent.putExtra("score", score);
+        gameMenu.startActivity(intent);*/
+
     }
 }
