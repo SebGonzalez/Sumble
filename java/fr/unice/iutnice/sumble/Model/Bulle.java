@@ -14,6 +14,8 @@ import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.R;
 
+import static fr.unice.iutnice.sumble.Controller.BulleFactory.verifBulleEnDessous;
+
 /**
  * Created by gonzo on 07/03/2017.
  */
@@ -29,6 +31,8 @@ public class Bulle {
     private BitmapDrawable img=null;
     private Context c;
     DisplayMetrics metrics;
+
+    private boolean bloque = false;
 
     public Bulle(Context c, DisplayMetrics m) {
         metrics = m;
@@ -59,23 +63,33 @@ public class Bulle {
         return y;
     }
 
+    public boolean isBloque() {
+        return bloque;
+    }
+
+    public void setBloque(boolean bloque) {
+        this.bloque = bloque;
+    }
+
     public void deplacementY(int valeur) throws Exception {
 
        // Log.v("verif", "" + verifBulleEnDessous(getPositionListeBulle()));
-        if( y+largeur <= metrics.heightPixels - ConversionDpPixel.dpToPx(25)) {
-            if (verifBulleEnDessous(getPositionListeBulle(), this) == -1) {
-                this.y += valeur;
+        if( y+largeur <= metrics.heightPixels - ConversionDpPixel.dpToPx(25) && !bloque) {
+            if (verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this) == -1 ) {
+                this.y += ConversionDpPixel.dpToPx(valeur);
+                //resetBloque();
             } else {
                 Bulle b = this.clone();
-                b.setX(b.getX() + verifBulleEnDessous(getPositionListeBulle(), this));
-                if (b.verifBulleEnDessous(getPositionListeBulle(), this) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
-                    this.setX(x + verifBulleEnDessous(getPositionListeBulle(), this));
-                    //Log.v("" + x, "" + BulleFactory.listeBulle.get(getPositionListeBulle()).getX());
-
-                  //  this.y+=valeur;
+                b.setX(b.getX() + verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this));
+                if (verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
+                    this.setX(x + verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this));
                 }
+                else
+                    bloque = true;
             }
         }
+        else
+            bloque = true;
     }
 
     public Bulle clone()  {
@@ -86,37 +100,6 @@ public class Bulle {
         b.setImage(c, R.drawable.bulle);
 
         return b;
-    }
-
-    public int verifBulleEnDessous(int pos, Bulle b) {
-        for(int i=0; i<pos; i++) {
-           /// Log.v(""+ (y+largeur), "" + BulleFactory.listeBulle.get(i).getY());
-           // Log.v(""+ (y+largeur), ""+(BulleFactory.listeBulle.get(i).getY()+BulleFactory.listeBulle.get(i).getLargeur()));
-          //  Log.v(""+BulleFactory.listeBulle.get(i).getLargeur(),"oui");
-            if(y+largeur > BulleFactory.listeBulle.get(i).getY() && y+largeur < BulleFactory.listeBulle.get(i).getY()+BulleFactory.listeBulle.get(i).getLargeur() && !b.equals(BulleFactory.listeBulle.get(i))) {
-                if(x>=BulleFactory.listeBulle.get(i).getX() && x < BulleFactory.listeBulle.get(i).getX() + BulleFactory.listeBulle.get(i).getLargeur()) {
-                     //Log.v(""+ x, "" + BulleFactory.listeBulle.get(i).getX() );
-                   //  Log.v(""+ x, ""+(BulleFactory.listeBulle.get(i).getX() + BulleFactory.listeBulle.get(i).getLargeur()));
-                      Log.v("","");
-                    return ( (BulleFactory.listeBulle.get(i).getX()+BulleFactory.listeBulle.get(i).getLargeur()) - x);
-                }
-                else if(x<=BulleFactory.listeBulle.get(i).getX() && x+largeur>BulleFactory.listeBulle.get(i).getX()) {
-                   // Log.v(""+ x, "" + BulleFactory.listeBulle.get(i).getX());
-                   // Log.v(""+ (x+largeur), ""+(BulleFactory.listeBulle.get(i).getX()));
-                    Log.v("","");
-                    return -(((x+largeur)-BulleFactory.listeBulle.get(i).getX()));
-                }
-            }
-        }
-        return -1;
-    }
-
-    private int getPositionListeBulle() throws Exception {
-        for(int i=0; i<BulleFactory.listeBulle.size(); i++) {
-            if(BulleFactory.listeBulle.get(i).equals(this))
-                return i;
-        }
-        throw new Exception("Bulle non enregistré");
     }
 
     public int getX() {

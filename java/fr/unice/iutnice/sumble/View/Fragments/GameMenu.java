@@ -164,4 +164,8 @@ public class GameMenu extends Fragment{
     public void setLimitlessChoisi(boolean valeur){
         limitlessChoisi = valeur;
     }
+
+    public boolean getLimitlessChoisi(){
+        return limitlessChoisi;
+    }
 }

@@ -6,7 +6,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -20,8 +23,10 @@ import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.Model.Bulle;
 import fr.unice.iutnice.sumble.R;
 
+import static android.R.attr.colorBackground;
 import static android.R.attr.x;
 import static android.R.attr.y;
+import static fr.unice.iutnice.sumble.R.color.backgroundBleuFonce;
 import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
 /**
@@ -53,17 +58,37 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected synchronized void onDraw(Canvas canvas) {
 
+        super.onDraw(canvas);
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+        paint.setTextAlign(Paint.Align.CENTER);
 
+        //affichage du background
         canvas.drawBitmap(backgroundResize, 0, 0, paint);
+
+        paint.setColor(ContextCompat.getColor(context, R.color.backgroundBleuFonce));
+        //fond vert
+        canvas.drawRect(0,0,metrics.widthPixels, ConversionDpPixel.dpToPx(60), paint);
+        //carré blanc
+        paint.setColor(Color.WHITE);
+        canvas.drawRect(metrics.widthPixels-ConversionDpPixel.dpToPx(80),0,metrics.widthPixels, ConversionDpPixel.dpToPx(30), paint);
+        //carré jaune
+        paint.setColor(Color.YELLOW);
+        canvas.drawRect(metrics.widthPixels-ConversionDpPixel.dpToPx(80),ConversionDpPixel.dpToPx(30),metrics.widthPixels, ConversionDpPixel.dpToPx(60), paint);
+
+        //texte
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(ConversionDpPixel.dpToPx(25));
+        canvas.drawText("Coups",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
+        canvas.drawText("0",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
+
 
 
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             canvas.drawBitmap(bulle.getImg().getBitmap(), bulle.getX(),  bulle.getY(), paint);
             paint.setTextSize( bulle.getLargeur()/2);
-            canvas.drawText(""+ bulle.getValeur(),  bulle.getX()+(bulle.getLargeur()/4) ,  bulle.getY()+bulle.getLargeur()/2, paint);
+            canvas.drawText(""+ bulle.getValeur(),  bulle.getX()+(bulle.getLargeur()/2) ,  (bulle.getY()+bulle.getLargeur()/2)- (paint.descent() + paint.ascent()/2), paint);
         }
     }
 
@@ -73,7 +98,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         Random random = new Random();
         int y = random.nextInt(5000);
-        if (y < 500) {
+        if (y < 100) {
             Random rand = new Random();
 
             int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
@@ -96,7 +121,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public synchronized boolean onTouchEvent(MotionEvent event) {
         int currentX = (int)event.getX();
         int currentY = (int)event.getY();
 
@@ -112,8 +137,15 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                             currentX <= bulleFactory.getListeBulle().get(i).getX() + bulleFactory.getListeBulle().get(i).getLargeur() &&
                             currentY >= bulleFactory.getListeBulle().get(i).getY() &&
                             currentY <= bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur()) {
+
+                        try {
+                            bulleFactory.resetBloque();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         //on supprime la bulle
                         bulleFactory.getListeBulle().remove(i);
+
                         //score++;
 
                         break;
@@ -124,11 +156,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         return true;  // On retourne "true" pour indiquer qu'on a géré l'évènement
     }
 
-    public void update() {
+    public synchronized void update() {
         genererBulle();
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             try {
-                bulle.deplacementY(ConversionDpPixel.dpToPx(5));
+                bulle.deplacementY(5);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -26,6 +26,10 @@ public class ButtonStartListener implements View.OnClickListener {
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
         gameMenu.startActivity(intent);
         Log.v("checked diff", ""+gameMenu.getCheckedDiff());
-        intent.putExtra("diff", gameMenu.getCheckedDiff());
+        intent.putExtra("difficulte", gameMenu.getCheckedDiff());
+        if(gameMenu.getLimitlessChoisi())
+            intent.putExtra("mode", "Limitless");
+        else
+            intent.putExtra("mode", "Challenge");
     }
 }
