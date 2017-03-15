@@ -48,4 +48,12 @@ public class Score implements Parcelable {
     public String toString(){
         return ""+valeur+", "+typeDifficulte.toString();
     }
+
+    public float getValeur() {
+        return valeur;
+    }
+
+    public TypeDifficulte getTypeDifficulte() {
+        return typeDifficulte;
+    }
 }
