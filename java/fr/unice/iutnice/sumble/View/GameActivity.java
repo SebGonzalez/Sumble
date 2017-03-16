@@ -14,7 +14,10 @@ import android.widget.Button;
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
+<<<<<<< HEAD
 import fr.unice.iutnice.sumble.R;
+=======
+>>>>>>> 6683c137c052e5ccd794a706df1650198282a56a
 
 public class GameActivity extends Activity {
 
@@ -28,9 +31,13 @@ public class GameActivity extends Activity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        SurfaceViewBulle surface = new SurfaceViewBulle(this.getApplicationContext(), metrics);
+        String mode = getIntent().getStringExtra("mode");
+        TypeDifficulte difficulte = getIntent().getExtras().getParcelable("difficulte");
+
+        SurfaceViewBulle surface = new SurfaceViewBulle(this.getApplicationContext(), metrics, mode, difficulte);
         setContentView(surface);
 
+<<<<<<< HEAD
         /*Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
 
         Log.v("score parcel", ""+testScore);
@@ -54,6 +61,18 @@ public class GameActivity extends Activity {
         String mode = getIntent().getExtras().getString("mode");
 
         return new Score(value, typeDiff, mode);
+=======
+        //Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
+
+       // Log.v("score parcel", ""+testScore);
+       // Log.v("type diff parcel", ""+testScore.getTypeDifficulte().toString());
+
+        //TEST - SendScore base de donnees
+        /*SendScore sendScore = new SendScore(this);
+        sendScore.setParametre(""+testScore.getValeur(), ""+testScore.getTypeDifficulte().toString(), getId());
+        Log.v("score exec", testScore.toString());
+        sendScore.execute();*/
+>>>>>>> 6683c137c052e5ccd794a706df1650198282a56a
     }
 
     public static boolean estFinie(){

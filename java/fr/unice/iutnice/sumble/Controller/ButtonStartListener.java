@@ -32,13 +32,21 @@ public class ButtonStartListener implements View.OnClickListener {
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
         Log.v("checked diff", ""+gameMenu.getCheckedDiff());
 
+<<<<<<< HEAD
         intent.putExtra("difficulte", (Parcelable) gameMenu.getCheckedDiff());
+=======
+        intent.putExtra("difficulte", (Parcelable)gameMenu.getCheckedDiff());
+>>>>>>> 6683c137c052e5ccd794a706df1650198282a56a
         if(gameMenu.getLimitlessChoisi())
             intent.putExtra("mode", "Limitless");
         else
             intent.putExtra("mode", "Challenge");
+<<<<<<< HEAD
         intent.putExtra("diff", (Parcelable) typeDifficulte);
 
+=======
+        gameMenu.startActivity(intent);
+>>>>>>> 6683c137c052e5ccd794a706df1650198282a56a
 
         //TEST - Score Parcelable : fonctionne
         /*Score score = new Score(22f, gameMenu.getCheckedDiff());

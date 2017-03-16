@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -22,6 +24,7 @@ import java.util.Random;
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.Model.Bulle;
+import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 
 import static android.R.attr.colorBackground;
@@ -42,10 +45,14 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     DisplayMetrics metrics;
     Context context;
 
+    String mode;
+    TypeDifficulte difficulte;
     BulleFactory bulleFactory;
     Bitmap backgroundResize;
 
-    public SurfaceViewBulle (Context context,  DisplayMetrics metrics) {
+    private boolean fin = false;
+
+    public SurfaceViewBulle (Context context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -55,6 +62,8 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         this.context = context;
 
         bulleFactory = new BulleFactory(context, metrics);
+        this.mode = mode;
+        this.difficulte = difficulte;
 
     }
 
@@ -83,6 +92,14 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         paint.setTextSize(ConversionDpPixel.dpToPx(25));
         canvas.drawText("Coups",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
         canvas.drawText("0",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
+        canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(20)- ((paint.descent() + paint.ascent()) / 2), paint);
+        paint.setTextSize(ConversionDpPixel.dpToPx(15));
+        paint.setColor(Color.WHITE);
+        canvas.drawText(difficulte.toString(),  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(40)- ((paint.descent() + paint.ascent()) / 2), paint);
+
+        Drawable dr = context.getResources().getDrawable(R.drawable.bulle);
+        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+        canvas.drawBitmap( new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(50),ConversionDpPixel.dpToPx(50), true)).getBitmap(), ConversionDpPixel.dpToPx(10), ConversionDpPixel.dpToPx(5), paint);
 
 
 
@@ -163,6 +180,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             GameActivity.setIsFinished(true);
         }
         genererBulle();
+
+        if(bulleFactory.getListeBulle().size() > 3) {
+            //Intent .....
+        }
+
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             try {
                 bulle.deplacementY(5);
