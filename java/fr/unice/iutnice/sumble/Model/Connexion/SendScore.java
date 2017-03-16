@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import fr.unice.iutnice.sumble.View.FinActivity;
 import fr.unice.iutnice.sumble.View.GameActivity;
 
 /**
@@ -28,16 +29,16 @@ public class SendScore extends AsyncTask{
     private URL url;
     private HttpURLConnection connection;
 
-    private GameActivity gameActivity;
+    private FinActivity finActivity;
 
-    public SendScore(GameActivity gameActivity){
-        this.gameActivity = gameActivity;
+    public SendScore(FinActivity finActivity){
+        this.finActivity = finActivity;
     }
 
     @Override
     protected void onPreExecute() {
 
-        chargement = new ProgressDialog(gameActivity);
+        chargement = new ProgressDialog(finActivity);
         chargement.setTitle("Envoi du score");
         chargement.setMessage("Veuillez patienter");
         chargement.show();
@@ -74,8 +75,8 @@ public class SendScore extends AsyncTask{
         chargement.hide();
     }
 
-    public void setParametre(String parametreScore, String parametreDiff, String id){
+    public void setParametre(String parametreScore, String parametreDiff, String id, String mode){
         Log.v("imei", id);
-        this.parametre = "score="+parametreScore+"&diff="+parametreDiff+"&id="+id;
+        this.parametre = "score="+parametreScore+"&diff="+parametreDiff+"&id="+id+"&mode="+mode;
     }
 }

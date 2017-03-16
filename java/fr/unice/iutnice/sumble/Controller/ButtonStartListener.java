@@ -1,6 +1,7 @@
 package fr.unice.iutnice.sumble.Controller;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -18,9 +19,11 @@ import fr.unice.iutnice.sumble.View.MainActivity;
 public class ButtonStartListener implements View.OnClickListener {
 
     private GameMenu gameMenu;
+    private TypeDifficulte typeDifficulte;
 
-    public ButtonStartListener(GameMenu gameMenu){
+    public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte){
         this.gameMenu = gameMenu;
+        this.typeDifficulte = typeDifficulte;
     }
 
     @Override
@@ -29,17 +32,18 @@ public class ButtonStartListener implements View.OnClickListener {
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
         Log.v("checked diff", ""+gameMenu.getCheckedDiff());
 
-        intent.putExtra("difficulte", gameMenu.getCheckedDiff());
+        intent.putExtra("difficulte", (Parcelable) gameMenu.getCheckedDiff());
         if(gameMenu.getLimitlessChoisi())
             intent.putExtra("mode", "Limitless");
         else
             intent.putExtra("mode", "Challenge");
+        intent.putExtra("diff", (Parcelable) typeDifficulte);
 
 
         //TEST - Score Parcelable : fonctionne
-      /*  Score score = new Score(22f, gameMenu.getCheckedDiff());
-        intent.putExtra("score", score);
-        gameMenu.startActivity(intent);*/
+        /*Score score = new Score(22f, gameMenu.getCheckedDiff());
+        intent.putExtra("score", score);*/
+        gameMenu.startActivity(intent);
 
     }
 }

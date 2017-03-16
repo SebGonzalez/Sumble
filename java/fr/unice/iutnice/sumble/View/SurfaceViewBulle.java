@@ -3,6 +3,7 @@ package fr.unice.iutnice.sumble.View;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -157,6 +158,10 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public synchronized void update() {
+        if(bulleFactory.getListeBulle().size() > 3) {
+
+            GameActivity.setIsFinished(true);
+        }
         genererBulle();
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             try {

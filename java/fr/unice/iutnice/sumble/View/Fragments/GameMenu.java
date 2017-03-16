@@ -95,7 +95,7 @@ public class GameMenu extends Fragment{
 
         lancerPartie = (Button)view.findViewById(R.id.lancerPartie);
         lancerPartie.setVisibility(View.INVISIBLE);
-        ButtonStartListener buttonStartListener = new ButtonStartListener(this);
+        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
         lancerPartie.setOnClickListener(buttonStartListener);
 
         return view;
