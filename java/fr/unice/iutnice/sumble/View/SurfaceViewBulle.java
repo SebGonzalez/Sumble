@@ -129,7 +129,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     public void genererBulle() {
 
-        Bulle bulle = new Bulle(this.getContext(), metrics, definirValeurBulle());
+        Bulle bulle = new Bulle(this.getContext(), metrics);
 
         Random random = new Random();
         int y = random.nextInt(5000);
@@ -140,12 +140,15 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             bulle.setX(x);
 
             if (bulleFactory.getListeBulle().size() > 0) {
-                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()))
+                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
+                    bulle.setValeur(definirValeurBulle());
                     bulleFactory.getListeBulle().add(bulle);
+                }
                 else {
                     return;
                 }
             } else {
+                bulle.setValeur(definirValeurBulle());
                 bulleFactory.getListeBulle().add(bulle);
             }
         }
@@ -160,9 +163,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         Random r = new Random();
 
        // int valeur = r.nextInt((max - min) + 1) + min;
-        Log.v(""+valeurAAtteindre + " " + compteurValeurBulle,  "" + ((((valeurAAtteindre-compteurValeurBulle)-1) + 1)+1) );
+
         int valeur = r.nextInt(((valeurAAtteindre-compteurValeurBulle)-1) + 1)+1;
-        compteurValeurBulle+= valeur;
+        Log.v(""+valeurAAtteindre + " " + compteurValeurBulle,  "" + valeur  + " " + ((((valeurAAtteindre-compteurValeurBulle)-1) + 1)+1));
+
+        compteurValeurBulle += valeur;
         if(compteurValeurBulle == valeurAAtteindre) {
             compteurValeurBulle = 0;
         }
@@ -171,7 +176,8 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     public void definirValeurAAtteindre() {
         Random r = new Random();
-       valeurAAtteindre = r.nextInt(((50-10)-1) + 1)+10;
+       valeurAAtteindre = r.nextInt(((10-5)-1) + 1)+5;
+        Log.v("Nouvelle valeur : " , "" + valeurAAtteindre);
 
     }
 

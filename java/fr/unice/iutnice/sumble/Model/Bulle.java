@@ -37,10 +37,9 @@ public class Bulle {
 
     private boolean bloque = false;
 
-    public Bulle(Context c, DisplayMetrics m, int valeur) {
+    public Bulle(Context c, DisplayMetrics m) {
         metrics = m;
         this.c=c;
-        this.valeur = valeur;
         Random r = new Random();
         // int valeur = r.nextInt((max - min) + 1) + min;
         largeur = ConversionDpPixel.dpToPx(r.nextInt((80 - 50) + 1) + 50);
@@ -59,6 +58,8 @@ public class Bulle {
     public int getValeur() {
         return valeur;
     }
+
+    public void setValeur(int valeur) {this.valeur = valeur;}
 
     public int getLargeur() {
         return largeur;
@@ -98,7 +99,7 @@ public class Bulle {
     }
 
     public Bulle clone()  {
-        Bulle b = new Bulle(c, metrics, valeur);
+        Bulle b = new Bulle(c, metrics);
         b.setX(x);
         b.setY(y);
         b.setLargeur(largeur);
