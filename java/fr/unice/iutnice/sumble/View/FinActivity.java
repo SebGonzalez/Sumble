@@ -20,6 +20,7 @@ public class FinActivity extends AppCompatActivity {
         Score score = getIntent().getExtras().getParcelable("score");
 
         SendScore sendScore = new SendScore(this);
+        Log.v("sendScore diff", ""+score.getTypeDifficulte().toString());
         sendScore.setParametre(""+score.getValeur(), ""+score.getTypeDifficulte().toString(), getId(), score.getMode());
         Log.v("score exec", score.toString());
         sendScore.execute();

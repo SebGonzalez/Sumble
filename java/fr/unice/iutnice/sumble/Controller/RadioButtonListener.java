@@ -37,5 +37,6 @@ public class RadioButtonListener implements RadioGroup.OnCheckedChangeListener{
         }else if(group.getCheckedRadioButtonId() == gameMenu.getDifficile().getId()){
             gameMenu.setCheckedDiff(TypeDifficulte.Difficile);
         }
+        gameMenu.setButtonStartListener();
     }
 }

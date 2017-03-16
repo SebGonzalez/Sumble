@@ -24,6 +24,7 @@ import java.util.Random;
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.Model.Bulle;
+import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 
@@ -95,7 +96,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(20)- ((paint.descent() + paint.ascent()) / 2), paint);
         paint.setTextSize(ConversionDpPixel.dpToPx(15));
         paint.setColor(Color.WHITE);
-        canvas.drawText(difficulte.toString(),  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(40)- ((paint.descent() + paint.ascent()) / 2), paint);
+        canvas.drawText("",  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(40)- ((paint.descent() + paint.ascent()) / 2), paint);
 
         Drawable dr = context.getResources().getDrawable(R.drawable.bulle);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
@@ -177,13 +178,13 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     public synchronized void update() {
         if(bulleFactory.getListeBulle().size() > 3) {
 
-            GameActivity.setIsFinished(true);
+            Intent intent = new Intent(context, FinActivity.class);
+            intent.putExtra("score", score(78f));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+
         }
         genererBulle();
-
-        if(bulleFactory.getListeBulle().size() > 3) {
-            //Intent .....
-        }
 
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             try {
@@ -259,6 +260,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                 } catch (InterruptedException e) {}*/
             }
         }
+    }
+
+    public Score score(float value){
+
+        return new Score(value, difficulte, mode);
     }
 }
 

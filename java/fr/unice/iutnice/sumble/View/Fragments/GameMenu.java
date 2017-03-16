@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,8 +96,6 @@ public class GameMenu extends Fragment{
 
         lancerPartie = (Button)view.findViewById(R.id.lancerPartie);
         lancerPartie.setVisibility(View.INVISIBLE);
-        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
-        lancerPartie.setOnClickListener(buttonStartListener);
 
         return view;
     }
@@ -143,7 +142,9 @@ public class GameMenu extends Fragment{
     }
 
     public void setCheckedDiff(TypeDifficulte choix){
+        Log.v("set..", choix.toString());
         checkedDiff = choix;
+        Log.v("set..", checkedDiff.toString());
     }
 
     public TypeDifficulte getCheckedDiff(){
@@ -168,5 +169,10 @@ public class GameMenu extends Fragment{
 
     public boolean getLimitlessChoisi(){
         return limitlessChoisi;
+    }
+
+    public void setButtonStartListener(){
+        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
+        lancerPartie.setOnClickListener(buttonStartListener);
     }
 }
