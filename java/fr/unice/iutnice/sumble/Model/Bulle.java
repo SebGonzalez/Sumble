@@ -10,10 +10,13 @@ import android.text.BoringLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.Random;
+
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.R;
 
+import static android.R.attr.max;
 import static fr.unice.iutnice.sumble.Controller.BulleFactory.verifBulleEnDessous;
 
 /**
@@ -34,13 +37,15 @@ public class Bulle {
 
     private boolean bloque = false;
 
-    public Bulle(Context c, DisplayMetrics m) {
+    public Bulle(Context c, DisplayMetrics m, int valeur) {
         metrics = m;
-        valeur = (int)(Math.random()*20);
-        largeur = metrics.widthPixels/5;
+        this.c=c;
+        this.valeur = valeur;
+        Random r = new Random();
+        // int valeur = r.nextInt((max - min) + 1) + min;
+        largeur = ConversionDpPixel.dpToPx(r.nextInt((80 - 50) + 1) + 50);
         x = metrics.widthPixels/2;
         y = 50;
-        this.c=c;
         img = setImage(c, R.drawable.bulle);
     }
 
@@ -93,7 +98,7 @@ public class Bulle {
     }
 
     public Bulle clone()  {
-        Bulle b = new Bulle(c, metrics);
+        Bulle b = new Bulle(c, metrics, valeur);
         b.setX(x);
         b.setY(y);
         b.setLargeur(largeur);

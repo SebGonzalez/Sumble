@@ -20,7 +20,6 @@ public class BulleFactory {
 
     public BulleFactory(Context c, DisplayMetrics metrics) {
         listeBulle = new ArrayList<>();
-        listeBulle.add(new Bulle(c, metrics));
     }
 
     public ArrayList<Bulle> getListeBulle() {
