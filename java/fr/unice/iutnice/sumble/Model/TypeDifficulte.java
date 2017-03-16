@@ -9,9 +9,9 @@ import android.os.Parcelable;
 
 public enum TypeDifficulte implements Parcelable{
 
-    Facile("FACILE"),
-    Moyen("INTERMEDIAIRE"),
-    Difficile("DIFFICILE");
+    Facile("Facile"),
+    Moyen("Intermédiaire"),
+    Difficile("Difficile");
 
 
     private String choix;

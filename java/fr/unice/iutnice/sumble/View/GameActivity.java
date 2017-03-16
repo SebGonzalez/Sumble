@@ -9,6 +9,7 @@ import android.util.Log;
 
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
+import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 
 public class GameActivity extends Activity {
 
@@ -20,19 +21,22 @@ public class GameActivity extends Activity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        SurfaceViewBulle surface = new SurfaceViewBulle(this.getApplicationContext(), metrics);
+        String mode = getIntent().getStringExtra("mode");
+        TypeDifficulte difficulte = getIntent().getExtras().getParcelable("difficulte");
+
+        SurfaceViewBulle surface = new SurfaceViewBulle(this.getApplicationContext(), metrics, mode, difficulte);
         setContentView(surface);
 
-        Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
+        //Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
 
-        Log.v("score parcel", ""+testScore);
-        Log.v("type diff parcel", ""+testScore.getTypeDifficulte().toString());
+       // Log.v("score parcel", ""+testScore);
+       // Log.v("type diff parcel", ""+testScore.getTypeDifficulte().toString());
 
         //TEST - SendScore base de donnees
-        SendScore sendScore = new SendScore(this);
+        /*SendScore sendScore = new SendScore(this);
         sendScore.setParametre(""+testScore.getValeur(), ""+testScore.getTypeDifficulte().toString(), getId());
         Log.v("score exec", testScore.toString());
-        sendScore.execute();
+        sendScore.execute();*/
     }
 
     public String getId(){

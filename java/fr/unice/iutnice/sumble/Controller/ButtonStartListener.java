@@ -1,6 +1,7 @@
 package fr.unice.iutnice.sumble.Controller;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -29,12 +30,12 @@ public class ButtonStartListener implements View.OnClickListener {
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
         Log.v("checked diff", ""+gameMenu.getCheckedDiff());
 
-        intent.putExtra("difficulte", gameMenu.getCheckedDiff());
+        intent.putExtra("difficulte", (Parcelable)gameMenu.getCheckedDiff());
         if(gameMenu.getLimitlessChoisi())
             intent.putExtra("mode", "Limitless");
         else
             intent.putExtra("mode", "Challenge");
-
+        gameMenu.startActivity(intent);
 
         //TEST - Score Parcelable : fonctionne
       /*  Score score = new Score(22f, gameMenu.getCheckedDiff());
