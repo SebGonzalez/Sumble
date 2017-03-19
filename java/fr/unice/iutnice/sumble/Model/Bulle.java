@@ -10,10 +10,13 @@ import android.text.BoringLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.Random;
+
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
 import fr.unice.iutnice.sumble.R;
 
+import static android.R.attr.max;
 import static fr.unice.iutnice.sumble.Controller.BulleFactory.verifBulleEnDessous;
 
 /**
@@ -36,11 +39,12 @@ public class Bulle {
 
     public Bulle(Context c, DisplayMetrics m) {
         metrics = m;
-        valeur = (int)(Math.random()*20);
-        largeur = metrics.widthPixels/5;
+        this.c=c;
+        Random r = new Random();
+        // int valeur = r.nextInt((max - min) + 1) + min;
+        largeur = ConversionDpPixel.dpToPx(r.nextInt((80 - 50) + 1) + 50);
         x = metrics.widthPixels/2;
         y = 50;
-        this.c=c;
         img = setImage(c, R.drawable.bulle);
     }
 
@@ -54,6 +58,8 @@ public class Bulle {
     public int getValeur() {
         return valeur;
     }
+
+    public void setValeur(int valeur) {this.valeur = valeur;}
 
     public int getLargeur() {
         return largeur;

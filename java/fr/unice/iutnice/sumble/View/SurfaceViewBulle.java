@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,6 +30,7 @@ import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 
 import static android.R.attr.colorBackground;
+import static android.R.attr.max;
 import static android.R.attr.x;
 import static android.R.attr.y;
 import static fr.unice.iutnice.sumble.R.color.backgroundBleuFonce;
@@ -52,6 +54,12 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     Bitmap backgroundResize;
 
     private boolean fin = false;
+
+    private float score = 0F;
+
+    private int compteurBulleTouche = 0;
+    private int compteurValeurBulle = 0;
+    private int valeurAAtteindre = 10;
 
     public SurfaceViewBulle (Context context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte) {
         super(context);
@@ -93,16 +101,24 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         paint.setTextSize(ConversionDpPixel.dpToPx(25));
         canvas.drawText("Coups",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
         canvas.drawText("0",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
-        canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(20)- ((paint.descent() + paint.ascent()) / 2), paint);
+        canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
         paint.setTextSize(ConversionDpPixel.dpToPx(15));
         paint.setColor(Color.WHITE);
-        canvas.drawText("",  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(40)- ((paint.descent() + paint.ascent()) / 2), paint);
+        canvas.drawText(""+difficulte,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(35)- ((paint.descent() + paint.ascent()) / 2), paint);
 
+        canvas.drawText("Score : " + score,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(50)- ((paint.descent() + paint.ascent()) / 2), paint);
+
+
+
+        //image de la bulle
         Drawable dr = context.getResources().getDrawable(R.drawable.bulle);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
         canvas.drawBitmap( new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(50),ConversionDpPixel.dpToPx(50), true)).getBitmap(), ConversionDpPixel.dpToPx(10), ConversionDpPixel.dpToPx(5), paint);
 
-
+        //valeur à atteindre
+        paint.setColor(Color.BLACK);
+        paint.setTextSize( ConversionDpPixel.dpToPx(50)/2);
+        canvas.drawText(""+valeurAAtteindre,  ConversionDpPixel.dpToPx(30),  ConversionDpPixel.dpToPx(27)- ((paint.descent() + paint.ascent()) / 2), paint);
 
         for(Bulle bulle : bulleFactory.getListeBulle()) {
             canvas.drawBitmap(bulle.getImg().getBitmap(), bulle.getX(),  bulle.getY(), paint);
@@ -117,25 +133,51 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         Random random = new Random();
         int y = random.nextInt(5000);
-        if (y < 100) {
+        if (y < 300) {
             Random rand = new Random();
 
             int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
             bulle.setX(x);
 
             if (bulleFactory.getListeBulle().size() > 0) {
-                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()))
+                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
+                    bulle.setValeur(definirValeurBulle());
                     bulleFactory.getListeBulle().add(bulle);
+                }
                 else {
                     return;
                 }
             } else {
+                bulle.setValeur(definirValeurBulle());
                 bulleFactory.getListeBulle().add(bulle);
             }
         }
         else {
             return;
         }
+
+    }
+
+    public int definirValeurBulle() {
+
+        Random r = new Random();
+
+       // int valeur = r.nextInt((max - min) + 1) + min;
+
+        int valeur = r.nextInt(((valeurAAtteindre-compteurValeurBulle)-1) + 1)+1;
+        Log.v(""+valeurAAtteindre + " " + compteurValeurBulle,  "" + valeur  + " " + ((((valeurAAtteindre-compteurValeurBulle)-1) + 1)+1));
+
+        compteurValeurBulle += valeur;
+        if(compteurValeurBulle == valeurAAtteindre) {
+            compteurValeurBulle = 0;
+        }
+        return valeur;
+    }
+
+    public void definirValeurAAtteindre() {
+        Random r = new Random();
+       valeurAAtteindre = r.nextInt(((10-5)-1) + 1)+5;
+        Log.v("Nouvelle valeur : " , "" + valeurAAtteindre);
 
     }
 
@@ -162,9 +204,11 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+                        compteurBulleTouche += bulleFactory.getListeBulle().get(i).getValeur();
                         //on supprime la bulle
                         bulleFactory.getListeBulle().remove(i);
-
+                        verifPoint();
                         //score++;
 
                         break;
@@ -175,20 +219,35 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         return true;  // On retourne "true" pour indiquer qu'on a géré l'évènement
     }
 
+    public void verifPoint() {
+        if(compteurBulleTouche > valeurAAtteindre) {
+            score--;
+            compteurBulleTouche = 0;
+            compteurValeurBulle = 0;
+            definirValeurAAtteindre();
+        }
+        else if(compteurBulleTouche == valeurAAtteindre) {
+            score++;
+            compteurBulleTouche=0;
+            compteurValeurBulle = 0;
+            definirValeurAAtteindre();
+        }
+       // Log.v(""+compteurBulleTouche, ""+score);
+    }
     public synchronized void update() {
-        if(bulleFactory.getListeBulle().size() > 3) {
+        /*if(bulleFactory.getListeBulle().size() > 3) {
 
             Intent intent = new Intent(context, FinActivity.class);
             intent.putExtra("score", score(78f));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
-        }
+        }*/
         genererBulle();
 
-        for(Bulle bulle : bulleFactory.getListeBulle()) {
+        for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
             try {
-                bulle.deplacementY(5);
+                bulleFactory.getListeBulle().get(i).deplacementY(5);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -198,6 +257,10 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         // Que faire quand le surface change ? (L'utilisateur tourne son téléphone par exemple)
+       // holder.setFixedSize(width, height);
+       // holder.setFormat(format);
+
+
     }
 
     @Override
