@@ -9,4 +9,5 @@
     <color name="transparent">#00ffffff</color>
     <color name="vert">#a6fa37</color>
     <color name="gris">#ebebeb</color>
+    <color name="noir">#000000</color>
 </resources>

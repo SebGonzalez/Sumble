@@ -40,6 +40,7 @@ public class ButtonStartListener implements View.OnClickListener {
         Log.v("difficulte onClick", ""+typeDifficulte.toString());
         intent.putExtra("difficulte", (Parcelable) typeDifficulte);
 
+
         gameMenu.startActivity(intent);
 
 

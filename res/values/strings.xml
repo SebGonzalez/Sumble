@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sumble</string>
     <string name="param">Paramètres</string>
-    <string name="score">Score</string>
+    <string name="scores">Scores</string>
     <string name="modeDeJeuTitre">Sélectionnez un mode de jeu</string>
     <string name="limitless">Limitless</string>
     <string name="challenge">Challenge</string>
@@ -10,4 +10,5 @@
     <string name="intermediaire">Intermédiaire</string>
     <string name="difficile">Difficile</string>
     <string name="lancerPartie">Lancer la partie</string>
+    <string name="bestScorePerso">Meilleurs scores perso</string>
 </resources>
