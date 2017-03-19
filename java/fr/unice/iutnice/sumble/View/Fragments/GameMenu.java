@@ -1,11 +1,15 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
@@ -19,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -33,7 +38,7 @@ import fr.unice.iutnice.sumble.View.MainActivity;
  * Created by Gabriel on 07/03/2017.
  */
 
-public class GameMenu extends Fragment{
+public class GameMenu extends Fragment {
 
     private TextView parametres;
     private TextView score;
@@ -57,6 +62,8 @@ public class GameMenu extends Fragment{
     private boolean limitlessChoisi;
     private TypeDifficulte checkedDiff;
 
+    public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
+
     public static GameMenu newInstance() {
 
         Bundle args = new Bundle(1);
@@ -69,6 +76,10 @@ public class GameMenu extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        }
+        Log.v("bite2", "bite");
         View view = inflater.inflate(R.layout.page_jouer, container, false);
 
         limitless = (Button)view.findViewById(R.id.limitless);
@@ -174,5 +185,26 @@ public class GameMenu extends Fragment{
     public void setButtonStartListener(){
         ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
         lancerPartie.setOnClickListener(buttonStartListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else {
+
+                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    Log.v("bite", "bite");
+                }
+                return;
+            }
+
+        }
     }
 }
