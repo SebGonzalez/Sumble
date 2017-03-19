@@ -34,8 +34,8 @@ public class BulleFactory {
         throw new Exception("Bulle non enregistré");
     }
 
-    public static int verifBulleEnDessous(int pos, Bulle b) {
-        for(int i=0; i<pos; i++) {
+    public static int verifBulleEnDessous(Bulle b) {
+        for(int i=0; i<listeBulle.size(); i++) {
 
             if(b.getY()+b.getLargeur() > listeBulle.get(i).getY() && b.getY()+b.getLargeur() < listeBulle.get(i).getY()+listeBulle.get(i).getLargeur() && !b.equals(listeBulle.get(i))) {
                 if(b.getX()>=listeBulle.get(i).getX() && b.getX() < listeBulle.get(i).getX() + listeBulle.get(i).getLargeur()) {
