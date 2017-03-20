@@ -27,29 +27,11 @@ public class FinActivity extends AppCompatActivity {
         Score score = getIntent().getExtras().getParcelable("score");
 
         SendScore sendScore = new SendScore(this);
+        String id = getIntent().getStringExtra("id");
         Log.v("sendScore diff", ""+score.getTypeDifficulte().toString());
-        sendScore.setParametre(""+score.getValeur(), ""+score.getTypeDifficulte().toString(), getUniqueID(), score.getMode());
+        sendScore.setParametre(""+score.getValeur(), ""+score.getTypeDifficulte().toString(), id, score.getMode());
         Log.v("score exec", score.toString());
         sendScore.execute();
     }
 
-    public String getUniqueID(){
-        String myAndroidDeviceId = "";
-        TelephonyManager mTelephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (mTelephony.getDeviceId() != null){
-            myAndroidDeviceId = mTelephony.getDeviceId();
-        }else{
-            myAndroidDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        }
-        return myAndroidDeviceId;
-    }
-
-    public String getId(){
-
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        Log.v("oui", ""+ telephonyManager.getDeviceId());
-        return telephonyManager.getDeviceId();
-
-
-    }
 }

@@ -31,8 +31,11 @@ public class GameActivity extends Activity {
         TypeDifficulte difficulte = getIntent().getParcelableExtra("difficulte");
         Log.v("difficulte GA", ""+difficulte);
 
-        SurfaceViewBulle surface = new SurfaceViewBulle(this.getApplicationContext(), metrics, mode, difficulte);
+        String id = getIntent().getStringExtra("id");
+
+        SurfaceViewBulle surface = new SurfaceViewBulle(this, metrics, mode, difficulte, id);
         setContentView(surface);
+
 
         /*Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
 

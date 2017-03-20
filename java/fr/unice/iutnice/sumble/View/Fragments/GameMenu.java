@@ -62,15 +62,17 @@ public class GameMenu extends Fragment {
 
     private boolean limitlessChoisi;
     private TypeDifficulte checkedDiff;
+    private String id;
 
     private MediaPlayer mPlayer = null;
 
     public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
 
-    public static GameMenu newInstance() {
+    public static GameMenu newInstance(String id) {
 
-        Bundle args = new Bundle(1);
+        Bundle args = new Bundle();
         GameMenu fragment = new GameMenu();
+        args.putString("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,6 +95,9 @@ public class GameMenu extends Fragment {
             }
         });
 
+
+        savedInstanceState = getArguments();
+        id = savedInstanceState.getString("id");
 
         limitless = (Button)view.findViewById(R.id.limitless);
         challenge = (Button)view.findViewById(R.id.challenge);
@@ -195,7 +200,7 @@ public class GameMenu extends Fragment {
     }
 
     public void setButtonStartListener(){
-        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
+        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff, id);
         lancerPartie.setOnClickListener(buttonStartListener);
     }
 

@@ -101,7 +101,7 @@ public class MainActivity extends FragmentActivity{
         List<Fragment> list = new ArrayList<Fragment>();
 
         list.add(SettingsMenu.newInstance());
-        list.add(GameMenu.newInstance());
+        list.add(GameMenu.newInstance(getUniqueID()));
         list.add(ScoreMenu.newInstance(getUniqueID()));
         Log.v("id", getUniqueID());
         return list;
@@ -111,16 +111,10 @@ public class MainActivity extends FragmentActivity{
         List<Fragment> list = new ArrayList<Fragment>();
 
         list.add(SettingsMenu.newInstance());
-        list.add(GameMenu.newInstance());
+        list.add(GameMenu.newInstance(getUniqueID()));
         //list.add(ScoreMenu.newInstance(getUniqueID()));
         Log.v("id", getUniqueID());
         return list;
-    }
-
-    public String getId(){
-
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId();
     }
 
     public String getUniqueID(){
