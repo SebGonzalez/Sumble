@@ -28,4 +28,17 @@ public class SwipePageAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return this.fragments.size();
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+
+        if(position == 0){
+            return "FACILE";
+        }else if(position == 1){
+            return "INTERMEDIAIRE";
+        }else if(position == 2){
+            return "DIFFICILE";
+        }
+        return "";
+    }
 }

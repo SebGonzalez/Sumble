@@ -86,7 +86,6 @@ public class GetScore extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object params){
-        chargement.hide();
 
         if(params == null){
             scoreMenu.getFacileValue().setText("-");
@@ -107,7 +106,7 @@ public class GetScore extends AsyncTask{
             scoreMenu.getDifficileValueL().setText(liste.get(5));
         }
 
-
+        chargement.hide();
     }
 
     public ArrayList<String> parseJson(String resultat){

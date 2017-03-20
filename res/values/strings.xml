@@ -11,4 +11,5 @@
     <string name="difficile">Difficile</string>
     <string name="lancerPartie">Lancer la partie</string>
     <string name="bestScorePerso">Meilleurs scores perso</string>
+    <string name="bestScoreMondiaux">Meilleurs scores mondiaux</string>
 </resources>
