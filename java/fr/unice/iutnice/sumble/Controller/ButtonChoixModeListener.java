@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -41,6 +43,11 @@ public class ButtonChoixModeListener implements View.OnClickListener {
         //Animation fadeIn = new AlphaAnimation(0,1);
         //gameMenu.getChoixDiff().setAnimation(fadeIn);
         gameMenu.getChoixDiff().setVisibility(View.VISIBLE);
+
+        Animation myAnim = AnimationUtils.loadAnimation(gameMenu.getContext(), R.anim.bouton_presse);
+        MyInterpolator myInterpolator = new MyInterpolator(0.2, 15);
+        myAnim.setInterpolator(myInterpolator);
+        v.startAnimation(myAnim);
 
 
     }

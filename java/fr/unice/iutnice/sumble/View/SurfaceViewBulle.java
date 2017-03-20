@@ -2,6 +2,8 @@ package fr.unice.iutnice.sumble.View;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,12 +11,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,12 +51,14 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     // Le thread dans lequel le dessin se fera
     DrawingThread mThread;
     DisplayMetrics metrics;
-    Context context;
+    private GameActivity context;
 
     String mode;
     TypeDifficulte difficulte;
     BulleFactory bulleFactory;
     Bitmap backgroundResize;
+
+    private String id;
 
     private boolean fin = false;
 
@@ -61,7 +70,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     private ArrayList<Bulle> bulleTouche;
     private int index = 0;
 
-    public SurfaceViewBulle (Context context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte) {
+    public SurfaceViewBulle (GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -84,6 +93,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
             couleur.add(tabCouleur);
         }
+        this.id = id;
 
     }
 
@@ -470,14 +480,33 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public synchronized void update() {
-        /*if(bulleFactory.getListeBulle().size() > 3) {
+        if(bulleFactory.getListeBulle().size() > 3 || score == -50.0) {
+            mThread.keepDrawing = false;
 
-            Intent intent = new Intent(context, FinActivity.class);
-            intent.putExtra("score", score(78f));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                public void run() {
 
-        }*/
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.perdu);
+                    builder.setMessage(R.string.continuer);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(context, FinActivity.class);
+                            intent.putExtra("score", score(score));
+                            intent.putExtra("id", id);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            context.finish();
+                        }
+                    });
+                    builder.show();
+                }
+            });
+
+        }
         genererBulle();
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {

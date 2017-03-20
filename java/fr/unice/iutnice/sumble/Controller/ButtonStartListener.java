@@ -1,13 +1,21 @@
 package fr.unice.iutnice.sumble.Controller;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Parcelable;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
 
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
+import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 import fr.unice.iutnice.sumble.View.GameActivity;
 import fr.unice.iutnice.sumble.View.MainActivity;
@@ -20,10 +28,12 @@ public class ButtonStartListener implements View.OnClickListener {
 
     private GameMenu gameMenu;
     private TypeDifficulte typeDifficulte;
+    private String id;
 
-    public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte){
+    public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte, String id){
         this.gameMenu = gameMenu;
         this.typeDifficulte = typeDifficulte;
+        this.id = id;
     }
 
     @Override
@@ -39,10 +49,10 @@ public class ButtonStartListener implements View.OnClickListener {
 
         Log.v("difficulte onClick", ""+typeDifficulte.toString());
         intent.putExtra("difficulte", (Parcelable) typeDifficulte);
-
+        intent.putExtra("id", id);
 
         gameMenu.startActivity(intent);
-
+        gameMenu.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
 
     }
 }

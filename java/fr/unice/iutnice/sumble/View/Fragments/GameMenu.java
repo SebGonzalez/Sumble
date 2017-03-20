@@ -61,13 +61,15 @@ public class GameMenu extends Fragment {
 
     private boolean limitlessChoisi;
     private TypeDifficulte checkedDiff;
+    private String id;
 
     public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
 
-    public static GameMenu newInstance() {
+    public static GameMenu newInstance(String id) {
 
-        Bundle args = new Bundle(1);
+        Bundle args = new Bundle();
         GameMenu fragment = new GameMenu();
+        args.putString("id", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,8 +81,11 @@ public class GameMenu extends Fragment {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
-        Log.v("bite2", "bite");
+
         View view = inflater.inflate(R.layout.page_jouer, container, false);
+
+        savedInstanceState = getArguments();
+        id = savedInstanceState.getString("id");
 
         limitless = (Button)view.findViewById(R.id.limitless);
         challenge = (Button)view.findViewById(R.id.challenge);
@@ -183,7 +188,7 @@ public class GameMenu extends Fragment {
     }
 
     public void setButtonStartListener(){
-        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
+        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff, id);
         lancerPartie.setOnClickListener(buttonStartListener);
     }
 
