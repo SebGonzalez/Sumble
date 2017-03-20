@@ -1,6 +1,7 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
@@ -51,6 +53,7 @@ public class GameMenu extends Fragment {
 
     private ImageView chevronRight;
     private ImageView chevronLeft;
+    private ImageView infosDiff;
 
     private RelativeLayout choixDiff;
 
@@ -113,6 +116,25 @@ public class GameMenu extends Fragment {
         score = (TextView)view.findViewById(R.id.score);
         chevronRight = (ImageView)view.findViewById(R.id.chevronright);
         chevronLeft = (ImageView)view.findViewById(R.id.chevronleft);
+
+        infosDiff = (ImageView)view.findViewById(R.id.infosDiff);
+        infosDiff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder infoWindow = new AlertDialog.Builder(getContext());
+                infoWindow.setTitle(R.string.infos);
+                infoWindow.setMessage("Débutant : Deux chiffres sont affichés dans la bulle, le premier correspond à la valeur de la bulle et le deuxième correspond à la valeur à atteindre avec ce chiffre. Les couleurs de chaque bulle permettent d’identifier les bulles à associer pour former le chiffre voulu.\n" +
+                        "Intermédiaire : Le deuxième chiffre n’est plus présent.\n" +
+                        "Expert : Le deuxième chiffre n’est plus présent et il n’y a plus les couleurs");
+                infoWindow.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                infoWindow.show();
+            }
+        });
 
         radioGroup = (RadioGroup)view.findViewById(R.id.radiogroup);
         RadioButtonListener radioButtonListener = new RadioButtonListener(this);
@@ -241,5 +263,9 @@ public class GameMenu extends Fragment {
             mPlayer.stop();
             mPlayer.release();
         }
+    }
+
+    public ImageView getInfosDiff(){
+        return infosDiff;
     }
 }

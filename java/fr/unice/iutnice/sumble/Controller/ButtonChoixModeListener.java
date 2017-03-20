@@ -42,6 +42,7 @@ public class ButtonChoixModeListener implements View.OnClickListener {
 
         //Animation fadeIn = new AlphaAnimation(0,1);
         //gameMenu.getChoixDiff().setAnimation(fadeIn);
+        gameMenu.getInfosDiff().setVisibility(View.VISIBLE);
         gameMenu.getChoixDiff().setVisibility(View.VISIBLE);
 
         Animation myAnim = AnimationUtils.loadAnimation(gameMenu.getContext(), R.anim.bouton_presse);

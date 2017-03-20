@@ -14,4 +14,5 @@
     <string name="bestScoreMondiaux">Meilleurs scores mondiaux</string>
     <string name="perdu">Vous avez perdu !</string>
     <string name="continuer">Appuyez sur ok pour continuer</string>
+    <string name="infos">Informations</string>
 </resources>

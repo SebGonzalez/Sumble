@@ -170,7 +170,18 @@
                     android:id="@+id/difficile"
                     android:layout_weight="1"
                     android:textSize="18sp" />
+
             </RadioGroup>
+
+            <ImageView
+                android:id="@+id/infosDiff"
+                android:layout_weight="1"
+                android:layout_marginEnd="21dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/difficulte"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/info" />
 
         </RelativeLayout>
 
