@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.iutnice.sumble.Controller.SwipePageAdapter;
+import fr.unice.iutnice.sumble.Controller.SwipeRefreshListener;
 import fr.unice.iutnice.sumble.Model.Connexion.GetScore;
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.R;
@@ -37,7 +39,7 @@ public class ScoreMenu extends Fragment {
 
     private ViewPager pager;
 
-    private int cpt=0;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private ImageView chevronLeft;
 
@@ -80,9 +82,12 @@ public class ScoreMenu extends Fragment {
         pager = (ViewPager)view.findViewById(R.id.modes);
         pager.setAdapter(new SwipePageAdapter(getFragmentManager(), getFragments()));
 
-        GetScore getScore = new GetScore(this);
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshListener(this, imei));
+
+        /*GetScore getScore = new GetScore(this);
         getScore.setParametre(imei);
-        getScore.execute();
+        getScore.execute();*/
 
         return view;
     }
@@ -118,5 +123,9 @@ public class ScoreMenu extends Fragment {
         list.add(Mode.newInstance("moyen"));
         list.add(Mode.newInstance("difficile"));
         return list;
+    }
+
+    public SwipeRefreshLayout getSwipeRefreshLayout(){
+        return swipeRefreshLayout;
     }
 }

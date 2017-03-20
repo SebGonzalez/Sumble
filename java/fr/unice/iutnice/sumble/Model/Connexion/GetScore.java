@@ -44,10 +44,10 @@ public class GetScore extends AsyncTask{
     @Override
     protected void onPreExecute() {
 
-        chargement = new ProgressDialog(scoreMenu.getContext());
+        /*chargement = new ProgressDialog(scoreMenu.getContext());
         chargement.setTitle("Chargement des données");
         chargement.setMessage("Veuillez patienter");
-        chargement.show();
+        chargement.show();*/
     }
 
     @Override
@@ -106,7 +106,9 @@ public class GetScore extends AsyncTask{
             scoreMenu.getDifficileValueL().setText(liste.get(5));
         }
 
-        chargement.hide();
+        scoreMenu.getSwipeRefreshLayout().setRefreshing(false);
+
+        //chargement.hide();
     }
 
     public ArrayList<String> parseJson(String resultat){
