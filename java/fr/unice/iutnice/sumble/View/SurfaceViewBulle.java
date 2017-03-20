@@ -138,10 +138,8 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             //Log.v("size : " + bulleFactory.getListeBulle().size() + " index : " + i, "sizeCouleur : " + couleur.size() + " index : " + bulleFactory.getListeBulle().get(i).getCouleur()  + " sizeV : " + valeurAAtteindre.size() + " index : " + index);
             paint.setColor(Color.rgb(couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[0], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[1], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[2]));
 
-            canvas.drawText("" + bulleFactory.getListeBulle().get(i).getValeur() + ":" + valeurAAtteindre.get(bulleFactory.getListeBulle().get(i).getCouleur()), bulleFactory.getListeBulle().get(i).getX() + (bulleFactory.getListeBulle().get(i).getLargeur() / 2), (bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur() / 2) - (paint.descent() + paint.ascent() / 2), paint);
+            canvas.drawText("" + bulleFactory.getListeBulle().get(i).getValeur() + "/" + valeurAAtteindre.get(bulleFactory.getListeBulle().get(i).getCouleur()), bulleFactory.getListeBulle().get(i).getX() + (bulleFactory.getListeBulle().get(i).getLargeur() / 2), (bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur() / 2) - (paint.descent() + paint.ascent() / 2), paint);
         }
-
-
     }
 
     public synchronized void genererBulle() {
@@ -150,7 +148,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         Random random = new Random();
         int y = random.nextInt(5000);
-        if (y < 500) {
+        if (y < 100) {
             Random rand = new Random();
 
             int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
@@ -482,7 +480,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
             try {
-                bulleFactory.getListeBulle().get(i).deplacementY(5);
+                bulleFactory.getListeBulle().get(i).deplacementY(3);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -540,11 +538,13 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                     // On récupère le canvas pour dessiner dessus
                     canvas = mSurfaceHolder.lockCanvas();
                     // On s'assure qu'aucun autre thread n'accède au holder
-                    synchronized (mSurfaceHolder) {
-                        //on déplace la bulle
-                        update();
-                        // Et on dessine
-                        onDraw(canvas);
+                    if (canvas != null) {
+                        synchronized (mSurfaceHolder) {
+                            //on déplace la bulle
+                            update();
+                            // Et on dessine
+                            onDraw(canvas);
+                        }
                     }
                 } finally {
                     // Notre dessin fini, on relâche le Canvas pour que le dessin s'affiche
@@ -561,7 +561,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public Score score(float value){
-
         return new Score(value, difficulte, mode);
     }
 }

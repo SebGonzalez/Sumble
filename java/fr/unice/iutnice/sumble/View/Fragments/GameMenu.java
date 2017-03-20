@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
@@ -62,6 +63,8 @@ public class GameMenu extends Fragment {
     private boolean limitlessChoisi;
     private TypeDifficulte checkedDiff;
 
+    private MediaPlayer mPlayer = null;
+
     public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
 
     public static GameMenu newInstance() {
@@ -79,8 +82,17 @@ public class GameMenu extends Fragment {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         }
-        Log.v("bite2", "bite");
+
         View view = inflater.inflate(R.layout.page_jouer, container, false);
+
+        ImageView titre = (ImageView)view.findViewById(R.id.logo);
+        titre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playSound(R.raw.sumble);
+            }
+        });
+
 
         limitless = (Button)view.findViewById(R.id.limitless);
         challenge = (Button)view.findViewById(R.id.challenge);
@@ -205,6 +217,24 @@ public class GameMenu extends Fragment {
                 return;
             }
 
+        }
+    }
+
+    private void playSound(int resId) {
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        mPlayer = MediaPlayer.create(this.getContext(), resId);
+        mPlayer.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
         }
     }
 }

@@ -3,13 +3,19 @@ package fr.unice.iutnice.sumble.View.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.unice.iutnice.sumble.Controller.SwipePageAdapter;
 import fr.unice.iutnice.sumble.Model.Connexion.GetScore;
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.R;
@@ -28,6 +34,8 @@ public class ScoreMenu extends Fragment {
     private TextView facileValueL;
     private TextView moyenValueL;
     private TextView difficileValueL;
+
+    private ViewPager pager;
 
     private int cpt=0;
 
@@ -69,6 +77,9 @@ public class ScoreMenu extends Fragment {
         difficileValueL = (TextView)view.findViewById(R.id.difficileValueL);
         difficileValueL.setText("-");
 
+        pager = (ViewPager)view.findViewById(R.id.modes);
+        pager.setAdapter(new SwipePageAdapter(getFragmentManager(), getFragments()));
+
         GetScore getScore = new GetScore(this);
         getScore.setParametre(imei);
         getScore.execute();
@@ -98,5 +109,14 @@ public class ScoreMenu extends Fragment {
 
     public TextView getDifficileValueL() {
         return difficileValueL;
+    }
+
+    public List<Fragment> getFragments(){
+        List<Fragment> list = new ArrayList<Fragment>();
+
+        list.add(Mode.newInstance("facile"));
+        list.add(Mode.newInstance("moyen"));
+        list.add(Mode.newInstance("difficile"));
+        return list;
     }
 }
