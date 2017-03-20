@@ -3,6 +3,7 @@ package fr.unice.iutnice.sumble.Model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -23,7 +24,7 @@ import static fr.unice.iutnice.sumble.Controller.BulleFactory.verifBulleEnDessou
  * Created by gonzo on 07/03/2017.
  */
 
-public class Bulle {
+public class Bulle implements Comparable {
 
     private int valeur;
     private int largeur;
@@ -34,6 +35,7 @@ public class Bulle {
     private BitmapDrawable img=null;
     private Context c;
     DisplayMetrics metrics;
+    int couleur;
 
     private boolean bloque = false;
 
@@ -77,20 +79,28 @@ public class Bulle {
         this.bloque = bloque;
     }
 
+    public int getCouleur() {
+        return couleur;
+    }
+
+    public void setCouleur(int couleur) {
+        this.couleur = couleur;
+    }
+
     public void deplacementY(int valeur) throws Exception {
 
        // Log.v("verif", "" + verifBulleEnDessous(getPositionListeBulle()));
         if( y+largeur <= metrics.heightPixels - ConversionDpPixel.dpToPx(25) && !bloque) {
-            if (verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this) == -1 ) {
+            if (verifBulleEnDessous(this) == -1 ) {
                 this.y += ConversionDpPixel.dpToPx(valeur);
                 //resetBloque();
             } else {
                 Bulle b = this.clone();
-                b.setX(b.getX() + verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this));
-                if (verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
-                    this.setX(x + verifBulleEnDessous(BulleFactory.getPositionListeBulle(this), this));
+                b.setX(b.getX() + verifBulleEnDessous(this));
+                if (verifBulleEnDessous(b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
+                    this.setX(x + verifBulleEnDessous(this));
                 }
-                else
+                else if(y>300)
                     bloque = true;
             }
         }
@@ -103,6 +113,8 @@ public class Bulle {
         b.setX(x);
         b.setY(y);
         b.setLargeur(largeur);
+        b.setCouleur(couleur);
+        b.setValeur(valeur);
         b.setImage(c, R.drawable.bulle);
 
         return b;
@@ -124,5 +136,19 @@ public class Bulle {
 
     public BitmapDrawable getImg() {
         return img;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(couleur > ((Bulle)o).getCouleur())
+            return 1;
+        else if(couleur < ((Bulle)o).getCouleur())
+            return -1;
+        else
+            return 0;
+    }
+
+    public String toString() {
+        return ""+couleur;
     }
 }
