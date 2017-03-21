@@ -84,16 +84,27 @@ public class MainActivity extends FragmentActivity{
                 }
             });
             builder.show();
+        }else{
+            Log.v("oui" , ""+isOnline());
         }
-        Log.v("oui" , ""+isOnline());
-        fragments = getFragments2();
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED && isOnline()) {
-            fragments = getFragments();
-        }
+
+        fragments = getFragments();
         pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
         viewPager = (ViewPager) super.findViewById(R.id.viewpager);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(1);
+
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            fragments = getFragments();
+        }
+
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.v("onResume", "dedans");
 
     }
 
@@ -111,7 +122,7 @@ public class MainActivity extends FragmentActivity{
         List<Fragment> list = new ArrayList<Fragment>();
 
         list.add(SettingsMenu.newInstance());
-       // list.add(GameMenu.newInstance(getUniqueID()));
+        //list.add(GameMenu.newInstance(getUniqueID()));
         //list.add(ScoreMenu.newInstance(getUniqueID()));
         return list;
     }

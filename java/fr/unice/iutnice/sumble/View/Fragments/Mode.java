@@ -1,5 +1,8 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,11 +51,6 @@ public class Mode extends Fragment {
         firstL = (TextView)view.findViewById(R.id.firstL);
         secondL = (TextView)view.findViewById(R.id.secondL);
         thirdL = (TextView)view.findViewById(R.id.thirdL);
-
-
-        GetAllScore getAllScore = new GetAllScore(this, difficulte);
-        getAllScore.execute();
-
 
         return view;
     }

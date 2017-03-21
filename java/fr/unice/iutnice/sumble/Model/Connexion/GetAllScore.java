@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class GetAllScore extends AsyncTask{
 
     private URL url;
     private HttpURLConnection connection;
+    private boolean isOk;
 
     private Mode mode;
     private String difficulte;
@@ -64,6 +66,7 @@ public class GetAllScore extends AsyncTask{
             int responseCode = connection.getResponseCode();
 
             if(responseCode == HttpURLConnection.HTTP_OK){
+                isOk = true;
                 Log.v("SendScore", "reponse ok");
                 String response = "";
                 String line;
@@ -81,6 +84,8 @@ public class GetAllScore extends AsyncTask{
                 listeAL.add(parseJson(response, "limitless", difficulte));
 
                 return listeAL;
+            }else{
+                isOk = false;
             }
 
         } catch (MalformedURLException e) {
@@ -98,19 +103,25 @@ public class GetAllScore extends AsyncTask{
         ArrayList<ArrayList<String>> listArrayList = (ArrayList<ArrayList<String>>) params;
         ArrayList<String> listeScore = new ArrayList<>();
 
-        for(int i=0 ; i<listArrayList.size() ; i++){
-            for(String score : listArrayList.get(i)){
-                listeScore.add(score);
+        if(listeScore != null){
+            for(int i=0 ; i<listArrayList.size() ; i++){
+                for(String score : listArrayList.get(i)){
+                    listeScore.add(score);
+                }
             }
+            mode.getFirstC().setText("1er-"+listeScore.get(0));
+            mode.getSecondC().setText("2ème-"+listeScore.get(1));
+            mode.getThirdC().setText("3ème-"+listeScore.get(2));
+
+            mode.getFirstL().setText("1er-"+listeScore.get(3));
+            mode.getSecondL().setText("2ème-"+listeScore.get(4));
+            mode.getThirdL().setText("3ème-"+listeScore.get(5));
+        }else{
+            Toast.makeText(mode.getContext(), "Une erreur est survenue", Toast.LENGTH_SHORT).show();
         }
 
-        mode.getFirstC().setText("1er-"+listeScore.get(0));
-        mode.getSecondC().setText("2ème-"+listeScore.get(1));
-        mode.getThirdC().setText("3ème-"+listeScore.get(2));
 
-        mode.getFirstL().setText("1er-"+listeScore.get(3));
-        mode.getSecondL().setText("2ème-"+listeScore.get(4));
-        mode.getThirdL().setText("3ème-"+listeScore.get(5));
+
     }
 
     public ArrayList<String> parseJson(String resultat, String mode, String difficulte){
