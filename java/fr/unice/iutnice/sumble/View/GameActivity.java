@@ -1,20 +1,12 @@
 package fr.unice.iutnice.sumble.View;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
-import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
-import fr.unice.iutnice.sumble.R;
+import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewDebutant;
 
 
 public class GameActivity extends Activity {
@@ -33,7 +25,7 @@ public class GameActivity extends Activity {
 
         String id = getIntent().getStringExtra("id");
 
-        SurfaceViewBulle surface = new SurfaceViewBulle(this, metrics, mode, difficulte, id);
+        SurfaceViewDebutant surface = new SurfaceViewDebutant(this, metrics, mode, difficulte, id);
         setContentView(surface);
 
 

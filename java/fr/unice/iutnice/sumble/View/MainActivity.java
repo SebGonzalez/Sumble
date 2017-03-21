@@ -58,8 +58,7 @@ public class MainActivity extends FragmentActivity{
 
         fragments = new ArrayList<Fragment>();
 
-        int permissionCheck = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_CALENDAR);
+        int permissionCheck = ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE);
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
@@ -87,9 +86,10 @@ public class MainActivity extends FragmentActivity{
             builder.show();
         }
         Log.v("oui" , ""+isOnline());
-        List<Fragment> fragments = getFragments2();
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED && isOnline())
-            fragments.add(ScoreMenu.newInstance(getUniqueID()));
+        fragments = getFragments2();
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED && isOnline()) {
+            fragments = getFragments();
+        }
         pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
         viewPager = (ViewPager) super.findViewById(R.id.viewpager);
         viewPager.setAdapter(pagerAdapter);
@@ -111,9 +111,8 @@ public class MainActivity extends FragmentActivity{
         List<Fragment> list = new ArrayList<Fragment>();
 
         list.add(SettingsMenu.newInstance());
-        list.add(GameMenu.newInstance(getUniqueID()));
+       // list.add(GameMenu.newInstance(getUniqueID()));
         //list.add(ScoreMenu.newInstance(getUniqueID()));
-        Log.v("id", getUniqueID());
         return list;
     }
 
@@ -155,13 +154,11 @@ public class MainActivity extends FragmentActivity{
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
                     fragments = getFragments();
                 } else {
                     Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
-                    fragments = getFragments2();
                 }
         }
     }
