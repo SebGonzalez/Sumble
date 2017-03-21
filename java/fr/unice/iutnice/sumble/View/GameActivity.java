@@ -7,6 +7,8 @@ import android.util.Log;
 
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewDebutant;
+import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewIExpert;
+import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewIntermediaire;
 
 
 public class GameActivity extends Activity {
@@ -25,8 +27,18 @@ public class GameActivity extends Activity {
 
         String id = getIntent().getStringExtra("id");
 
-        SurfaceViewDebutant surface = new SurfaceViewDebutant(this, metrics, mode, difficulte, id);
-        setContentView(surface);
+        if(difficulte.equals(TypeDifficulte.Facile)) {
+            SurfaceViewDebutant surface = new SurfaceViewDebutant(this, metrics, mode, difficulte, id);
+            setContentView(surface);
+        }
+        else if(difficulte.equals(TypeDifficulte.Moyen)) {
+            SurfaceViewIntermediaire surface = new SurfaceViewIntermediaire(this, metrics, mode, difficulte, id);
+            setContentView(surface);
+        }
+        else {
+            SurfaceViewIExpert surface = new SurfaceViewIExpert(this, metrics, mode, difficulte, id);
+            setContentView(surface);
+        }
 
 
         /*Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer

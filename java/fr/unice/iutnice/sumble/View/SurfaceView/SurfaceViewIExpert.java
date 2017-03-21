@@ -31,7 +31,7 @@ import fr.unice.iutnice.sumble.View.GameActivity;
  * Created by gonzo on 07/03/2017.
  */
 
-public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
+public class SurfaceViewIExpert extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
     // Le holder
     SurfaceHolder mSurfaceHolder;
     // Le thread dans lequel le dessin se fera
@@ -58,7 +58,7 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
     private MediaPlayer mPlayer = null;
     private MediaPlayer mPlayerFond = null;
 
-    public SurfaceViewIntermediaire(GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
+    public SurfaceViewIExpert(GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -132,7 +132,6 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
             canvas.drawBitmap(bulleFactory.getListeBulle().get(i).getImg(), bulleFactory.getListeBulle().get(i).getX(), bulleFactory.getListeBulle().get(i).getY(), paint);
             paint.setTextSize(bulleFactory.getListeBulle().get(i).getLargeur() / 2);
-            paint.setColor(Color.rgb(couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[0], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[1], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[2]));
 
             canvas.drawText("" + bulleFactory.getListeBulle().get(i).getValeur(), bulleFactory.getListeBulle().get(i).getX() + (bulleFactory.getListeBulle().get(i).getLargeur() / 2), (bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur() / 2) - (paint.descent() + paint.ascent() / 2), paint);
         }
