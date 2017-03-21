@@ -37,6 +37,8 @@ import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.MainActivity;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
 /**
  * Created by Gabriel on 07/03/2017.
  */
@@ -99,9 +101,6 @@ public class GameMenu extends Fragment {
         });
 
 
-        savedInstanceState = getArguments();
-        id = savedInstanceState.getString("id");
-
         limitless = (Button)view.findViewById(R.id.limitless);
         challenge = (Button)view.findViewById(R.id.challenge);
 
@@ -147,7 +146,44 @@ public class GameMenu extends Fragment {
         lancerPartie = (Button)view.findViewById(R.id.lancerPartie);
         lancerPartie.setVisibility(View.INVISIBLE);
 
+        if(savedInstanceState != null) {
+            if(savedInstanceState.getInt("saveVisibilityDiff") == View.VISIBLE)
+                choixDiff.setVisibility(View.VISIBLE);
+            else if(savedInstanceState.getInt("saveVisibilityDiff") == View.INVISIBLE)
+                choixDiff.setVisibility(View.INVISIBLE);
+
+            if(savedInstanceState.getBoolean("saveButton") == false) {
+                setBackgroundChallenge(R.drawable.backgroundbuttonvert);
+                setBackgroundLimitless(R.drawable.backgroundbuttongris);
+            }
+            else {
+                setBackgroundLimitless(R.drawable.backgroundbuttonvert);
+                setBackgroundChallenge(R.drawable.backgroundbuttongris);
+            }
+
+            if(savedInstanceState.getParcelable("saveDifficulte") != null) {
+                if (savedInstanceState.getParcelable("saveDifficulte").equals(TypeDifficulte.Facile)) {
+                    setCheckedDiff(TypeDifficulte.Facile);
+                } else if (savedInstanceState.getParcelable("saveDifficulte").equals(TypeDifficulte.Moyen)) {
+                    setCheckedDiff(TypeDifficulte.Moyen);
+                } else {
+                    setCheckedDiff(TypeDifficulte.Difficile);
+                }
+            }
+        }
+
+        savedInstanceState = getArguments();
+        id = savedInstanceState.getString("id");
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("saveVisibilityDiff", choixDiff.getVisibility());
+        outState.putBoolean("saveButton", limitlessChoisi);
+        outState.putParcelable("saveDifficulte", getCheckedDiff());
     }
 
     public Button getLimitless(){
@@ -224,27 +260,6 @@ public class GameMenu extends Fragment {
     public void setButtonStartListener(){
         ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff, id);
         lancerPartie.setOnClickListener(buttonStartListener);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-
-                } else {
-
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                    Log.v("bite", "bite");
-                }
-                return;
-            }
-
-        }
     }
 
     private void playSound(int resId) {

@@ -86,9 +86,9 @@ public class MainActivity extends FragmentActivity{
             });
             builder.show();
         }
-
-        List<Fragment> fragments = getFragments();
-        if(permissionCheck == PackageManager.PERMISSION_GRANTED)
+        Log.v("oui" , ""+isOnline());
+        List<Fragment> fragments = getFragments2();
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED && isOnline())
             fragments.add(ScoreMenu.newInstance(getUniqueID()));
         pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
         viewPager = (ViewPager) super.findViewById(R.id.viewpager);

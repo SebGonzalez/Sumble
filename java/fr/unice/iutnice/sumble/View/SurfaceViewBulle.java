@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,6 +58,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     TypeDifficulte difficulte;
     BulleFactory bulleFactory;
     Bitmap backgroundResize;
+    Bitmap bulle;
 
     private String id;
 
@@ -69,6 +71,9 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     private ArrayList<Integer[]> couleur = new ArrayList<>();
     private ArrayList<Bulle> bulleTouche;
     private int index = 0;
+
+    private MediaPlayer mPlayer = null;
+    private MediaPlayer mPlayerFond = null;
 
     public SurfaceViewBulle (GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
         super(context);
@@ -98,7 +103,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     @Override
-    protected synchronized void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
@@ -132,9 +137,8 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
 
         //image de la bulle
-        Drawable dr = ContextCompat.getDrawable(context, bulle);
-        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-        canvas.drawBitmap( new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(50),ConversionDpPixel.dpToPx(50), true)).getBitmap(), ConversionDpPixel.dpToPx(10), ConversionDpPixel.dpToPx(5), paint);
+
+        canvas.drawBitmap( bulle, ConversionDpPixel.dpToPx(10), ConversionDpPixel.dpToPx(5), paint);
 
         //valeur à atteindre
         paint.setColor(Color.BLACK);
@@ -143,22 +147,22 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
-            canvas.drawBitmap(bulleFactory.getListeBulle().get(i).getImg().getBitmap(), bulleFactory.getListeBulle().get(i).getX(), bulleFactory.getListeBulle().get(i).getY(), paint);
+            canvas.drawBitmap(bulleFactory.getListeBulle().get(i).getImg(), bulleFactory.getListeBulle().get(i).getX(), bulleFactory.getListeBulle().get(i).getY(), paint);
             paint.setTextSize(bulleFactory.getListeBulle().get(i).getLargeur() / 2);
-            //Log.v("size : " + bulleFactory.getListeBulle().size() + " index : " + i, "sizeCouleur : " + couleur.size() + " index : " + bulleFactory.getListeBulle().get(i).getCouleur()  + " sizeV : " + valeurAAtteindre.size() + " index : " + index);
             paint.setColor(Color.rgb(couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[0], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[1], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[2]));
 
             canvas.drawText("" + bulleFactory.getListeBulle().get(i).getValeur() + "/" + valeurAAtteindre.get(bulleFactory.getListeBulle().get(i).getCouleur()), bulleFactory.getListeBulle().get(i).getX() + (bulleFactory.getListeBulle().get(i).getLargeur() / 2), (bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur() / 2) - (paint.descent() + paint.ascent() / 2), paint);
         }
     }
 
-    public synchronized void genererBulle() {
-
-        Bulle bulle = new Bulle(this.getContext(), metrics);
+    public void genererBulle() {
 
         Random random = new Random();
         int y = random.nextInt(5000);
-        if (y < 100) {
+        if (y < 500) {
+
+            Bulle bulle = new Bulle(this.getContext(), metrics);
+
             Random rand = new Random();
 
             int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
@@ -187,7 +191,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     }
 
-    public synchronized int[] definirValeurBulle(boolean aleatoire) {
+    public int[] definirValeurBulle(boolean aleatoire) {
 
         Random r = new Random();
         Integer randPos;
@@ -201,7 +205,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         else
             randPos = index;
 
-       // Log.v("rand : "+randPos + " index : " + index, "atteindre : " + valeurAAtteindre.get(randPos) + " somme : " + compteurValeurBulle.get(randPos));
         if(compteurValeurBulle.get(randPos) != valeurAAtteindre.get(randPos)) {
             Integer max = valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos);
             Integer randValeur = r.nextInt(max) + 1;
@@ -225,7 +228,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             return definirValeurBulle(false);
     }
 
-    public synchronized void etat() {
+    public void etat() {
         ArrayList<Boolean> liste = new ArrayList<>();
         for(int i=0; i<valeurAAtteindre.size(); i++) {
             if(valeurAAtteindre.get(i) == compteurValeurBulle.get(i))
@@ -233,16 +236,13 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             else
                 liste.add(new Boolean(false));
         }
-        Log.v("Liste",""+liste);
-        Log.v("Index " , ""+index);
     }
 
-    public synchronized int definirValeurAAtteindre() {
+    public int definirValeurAAtteindre() {
         Random r = new Random();
         int valeur = r.nextInt(10)+1;
         if(!valeurAAtteindre.isEmpty()) {
             if (valeur != valeurAAtteindre.get(valeurAAtteindre.size() - 1)) {
-                Log.v("Nouvelle valeur : ", "" + valeurAAtteindre);
                 return valeur;
             }
             else return definirValeurAAtteindre();
@@ -269,11 +269,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                             currentY >= bulleFactory.getListeBulle().get(i).getY() &&
                             currentY <= bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur()) {
 
-                        try {
                             bulleFactory.resetBloque();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
                         Bulle b = bulleFactory.getListeBulle().get(i).clone();
                         bulleTouche.add(b);
@@ -289,13 +285,14 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         return true;  // On retourne "true" pour indiquer qu'on a géré l'évènement
     }
 
-    public synchronized void verifPoint() {
+    public void verifPoint() {
         int sommeBulleTouche = sommeBulleTouche();
-        Log.v(""+sommeBulleTouche, ""+valeurAAtteindre.get(0));
         if(sommeBulleTouche > valeurAAtteindre.get(0)) {
+            playSound(R.raw.erreur);
             score += modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
+
             /*compteurValeurBulle.remove(0);
             valeurAAtteindre.remove(0);
             couleur.remove(0);*/
@@ -330,7 +327,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
-    public synchronized int sommeBulleTouche() {
+    public int sommeBulleTouche() {
         int compteur = 0;
 
         for(int i=0; i<bulleTouche.size(); i++) {
@@ -356,15 +353,13 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
-    public synchronized void supprimerBulleOutDated() {
+    public void supprimerBulleOutDated() {
         //On trie la liste d'index décroissante
         Collections.sort(bulleTouche, Collections.reverseOrder());
-        Log.v("Liste trie", ""+bulleTouche);
 
         int e=0;
         //pour chaque bulle on supprime dans la liste à l'écran celle qui correspondent à la couleur de celle touché
         for(int i=0; i<bulleTouche.size(); i++) {
-            Log.v("BIATCH", "BIATCH");
             while(e<bulleFactory.getListeBulle().size()) {
                 if(bulleTouche.get(i).getCouleur() == bulleFactory.getListeBulle().get(e).getCouleur()) {
                     bulleFactory.getListeBulle().remove(e);
@@ -375,11 +370,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             }
         }
 
-        for(int z=0; z<bulleFactory.getListeBulle().size(); z++) {
-
-            Log.v("OUIIIIIII : " + z, "" + bulleFactory.getListeBulle().get(z).getCouleur());
-        }
-
         int z=0;
         while(z<bulleFactory.getListeBulle().size()) {
             if(bulleFactory.getListeBulle().get(z).getCouleur() == 0) {
@@ -388,10 +378,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             }
             else
                 z++;
-        }
-        for(int a=0; a<bulleFactory.getListeBulle().size(); a++) {
-
-            Log.v("NOOOOOOOOON : " + a, "" + bulleFactory.getListeBulle().get(a).getCouleur());
         }
 
         if(bulleTouche.get(0).getCouleur() != 0) {
@@ -408,12 +394,9 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             couleur.remove(bulleTouche.get(0).getCouleur());
 
             for (int y = 0; y < bulleFactory.getListeBulle().size(); y++) {
-                Log.v("couleur Couleur : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
                 if (bulleFactory.getListeBulle().get(y).getCouleur() > bulleTouche.get(0).getCouleur()) {
                     bulleFactory.getListeBulle().get(y).setCouleur(bulleFactory.getListeBulle().get(y).getCouleur() - 1);
                 }
-                Log.v("COULEUR COULEUR : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
-                // Log.v("Couleur : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
             }
 
             if(bulleTouche.get(0).getCouleur() < index)
@@ -423,7 +406,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             for (int i = 1; i < bulleTouche.size(); i++) {
 
                 if (bulleTouche.get(i).getCouleur() != bulleTouche.get(i - 1).getCouleur() && bulleTouche.get(i).getCouleur() != 0) {
-                    //Log.v("oui","curinga");
                     if(valeurAAtteindre.get(bulleTouche.get(i).getCouleur()) != compteurValeurBulle.get(bulleTouche.get(i).getCouleur())) {
                         compteurValeurBulle.add(0);
                         valeurAAtteindre.add(definirValeurAAtteindre());
@@ -439,11 +421,9 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                     couleur.remove(bulleTouche.get(i).getCouleur());
 
                     for (int y = 0; y < bulleFactory.getListeBulle().size(); y++) {
-                        Log.v("après Couleur : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
                         if (bulleFactory.getListeBulle().get(y).getCouleur() > bulleTouche.get(i).getCouleur()) {
                             bulleFactory.getListeBulle().get(y).setCouleur(bulleFactory.getListeBulle().get(y).getCouleur() - 1);
                         }
-                        Log.v("avant Couleur : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
                     }
                 }
 
@@ -469,15 +449,12 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             index--;
 
         for (int y = 0; y < bulleFactory.getListeBulle().size(); y++) {
-            Log.v("Couleur avant : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
             bulleFactory.getListeBulle().get(y).setCouleur(bulleFactory.getListeBulle().get(y).getCouleur() - 1);
-            Log.v("Couleur après : " + y, "" + bulleFactory.getListeBulle().get(y).getCouleur());
         }
 
-        etat();
     }
 
-    public synchronized void update() {
+    public void update() throws Exception {
         if(bulleFactory.getListeBulle().size() > 3 || score == -50.0) {
             mThread.keepDrawing = false;
 
@@ -508,11 +485,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         genererBulle();
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
-            try {
-                bulleFactory.getListeBulle().get(i).deplacementY(3);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            bulleFactory.getListeBulle().get(i).deplacementY(5);
         }
     }
 
@@ -527,15 +500,20 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundw);
+        final Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundw);
         float scale = (float)background.getHeight()/(float)getHeight();
         int newWidth = Math.round(background.getWidth()/scale);
         int newHeight = Math.round(background.getHeight()/scale);
         backgroundResize = Bitmap.createScaledBitmap(background, newWidth, newHeight, true);
 
+        final Bitmap bitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.bulle);
+        bulle = Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(60),ConversionDpPixel.dpToPx(60), false);
+
         //création du thread permettant l'actualisation de l'affichage
         mThread.keepDrawing = true;
         mThread.start();
+
+        playSoundLoop(R.raw.ambiance);
     }
 
     @Override
@@ -552,6 +530,34 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
             }
         }
     }
+
+    private void playSound(int resId) {
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        mPlayer = MediaPlayer.create(this.getContext(), resId);
+        mPlayer.start();
+    }
+
+    private void playSoundLoop(int resId) {
+        if(mPlayerFond != null) {
+            mPlayerFond.stop();
+            mPlayerFond.release();
+        }
+        mPlayerFond = MediaPlayer.create(this.getContext(), resId);
+        mPlayerFond.setLooping(true);
+        mPlayerFond.start();
+    }
+
+    /*@Override
+    public void onPause() {
+        super.onPause();
+        if(mPlayer != null) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+    }*/
 
     private class DrawingThread extends Thread {
         // Utilisé pour arrêter le dessin quand il le faut
@@ -571,10 +577,16 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                         synchronized (mSurfaceHolder) {
                             //on déplace la bulle
                             update();
+                            mSurfaceHolder.notify();
+                        }
+                        synchronized (mSurfaceHolder) {
                             // Et on dessine
                             onDraw(canvas);
+                            mSurfaceHolder.notify();
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     // Notre dessin fini, on relâche le Canvas pour que le dessin s'affiche
                     if (canvas != null)

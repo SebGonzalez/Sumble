@@ -2,6 +2,7 @@ package fr.unice.iutnice.sumble.Model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +20,7 @@ import fr.unice.iutnice.sumble.R;
 
 import static android.R.attr.max;
 import static fr.unice.iutnice.sumble.Controller.BulleFactory.verifBulleEnDessous;
+import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
 /**
  * Created by gonzo on 07/03/2017.
@@ -32,12 +34,16 @@ public class Bulle implements Comparable {
     private int y;
     private int x;
 
-    private BitmapDrawable img=null;
-    private Context c;
-    DisplayMetrics metrics;
+    private final Bitmap img;
+    private final Context c;
+    final DisplayMetrics metrics;
     int couleur;
 
     private boolean bloque = false;
+
+    /*public Bulle() {
+
+    }*/
 
     public Bulle(Context c, DisplayMetrics m) {
         metrics = m;
@@ -47,14 +53,21 @@ public class Bulle implements Comparable {
         largeur = ConversionDpPixel.dpToPx(r.nextInt((80 - 50) + 1) + 50);
         x = metrics.widthPixels/2;
         y = 50;
-        img = setImage(c, R.drawable.bulle);
+
+        //assignation de l'image
+        final Bitmap bitmap =  BitmapFactory.decodeResource(c.getResources(), R.drawable.bulle);
+        img = Bitmap.createScaledBitmap(bitmap,largeur,largeur, false);
+
     }
 
     public BitmapDrawable setImage(final Context c, final int ressource)
     {
-        Drawable dr = c.getResources().getDrawable(ressource);
-        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-        return new BitmapDrawable(c.getResources(), Bitmap.createScaledBitmap(bitmap, largeur,largeur, true));
+        final Drawable dr = c.getResources().getDrawable(ressource);
+        final Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+        final BitmapDrawable bitmapDrawable = new BitmapDrawable(c.getResources(), Bitmap.createScaledBitmap(bitmap, largeur,largeur, false));
+
+       // bitmap.recycle();
+        return bitmapDrawable;
     }
 
     public int getValeur() {
@@ -115,7 +128,6 @@ public class Bulle implements Comparable {
         b.setLargeur(largeur);
         b.setCouleur(couleur);
         b.setValeur(valeur);
-        b.setImage(c, R.drawable.bulle);
 
         return b;
     }
@@ -134,7 +146,7 @@ public class Bulle implements Comparable {
         this.valeur=valeur;
     }
 
-    public BitmapDrawable getImg() {
+    public Bitmap getImg() {
         return img;
     }
 
