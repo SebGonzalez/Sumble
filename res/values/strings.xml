@@ -15,4 +15,8 @@
     <string name="perdu">Vous avez perdu !</string>
     <string name="continuer">Appuyez sur ok pour continuer</string>
     <string name="infos">Informations</string>
+    <string name="finjeu">Fin du jeu</string>
+    <string name="votreScore">Vous avez réalisé un score de </string>
+    <string name="recommencer">Recommencer</string>
+    <string name="retourMenu">Retour au menu</string>
 </resources>

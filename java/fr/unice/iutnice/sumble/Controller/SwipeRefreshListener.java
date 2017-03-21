@@ -28,6 +28,7 @@ public class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListene
             @Override public void run() {
                 scoreMenu.getSwipeRefreshLayout().setRefreshing(true);
                 scoreMenu.getSwipeRefreshLayout().canChildScrollUp();
+
                 GetScore getScore = new GetScore(scoreMenu);
                 getScore.setParametre(id);
                 getScore.execute();
