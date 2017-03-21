@@ -1,52 +1,37 @@
-package fr.unice.iutnice.sumble.View;
+package fr.unice.iutnice.sumble.View.SurfaceView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
+import fr.unice.iutnice.sumble.Controller.iNiveau;
+import fr.unice.iutnice.sumble.Controller.iSon;
 import fr.unice.iutnice.sumble.Model.Bulle;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
-
-import static android.R.attr.max;
-import static android.R.attr.y;
-import static fr.unice.iutnice.sumble.R.drawable.bulle;
+import fr.unice.iutnice.sumble.View.GameActivity;
 
 /**
  * Created by gonzo on 07/03/2017.
  */
 
-public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callback {
+public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
     // Le holder
     SurfaceHolder mSurfaceHolder;
     // Le thread dans lequel le dessin se fera
@@ -62,8 +47,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
 
     private String id;
 
-    private boolean fin = false;
-
     private float score = 0F;
 
     private ArrayList<Integer> compteurValeurBulle;
@@ -75,7 +58,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     private MediaPlayer mPlayer = null;
     private MediaPlayer mPlayerFond = null;
 
-    public SurfaceViewBulle (GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
+    public SurfaceViewIntermediaire(GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -455,7 +438,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void update() throws Exception {
-        if(bulleFactory.getListeBulle().size() > 3 || score == -50.0) {
+        /*if(bulleFactory.getListeBulle().size() > 3 || score == -50.0) {
             mThread.keepDrawing = false;
 
             Handler handler = new Handler(Looper.getMainLooper());
@@ -481,7 +464,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
                 }
             });
 
-        }
+        }*/
         genererBulle();
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
@@ -531,7 +514,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
-    private void playSound(int resId) {
+    public void playSound(int resId) {
         if(mPlayer != null) {
             mPlayer.stop();
             mPlayer.release();
@@ -540,7 +523,7 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         mPlayer.start();
     }
 
-    private void playSoundLoop(int resId) {
+    public void playSoundLoop(int resId) {
         if(mPlayerFond != null) {
             mPlayerFond.stop();
             mPlayerFond.release();
@@ -549,15 +532,6 @@ public class SurfaceViewBulle extends SurfaceView implements SurfaceHolder.Callb
         mPlayerFond.setLooping(true);
         mPlayerFond.start();
     }
-
-    /*@Override
-    public void onPause() {
-        super.onPause();
-        if(mPlayer != null) {
-            mPlayer.stop();
-            mPlayer.release();
-        }
-    }*/
 
     private class DrawingThread extends Thread {
         // Utilisé pour arrêter le dessin quand il le faut
