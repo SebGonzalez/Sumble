@@ -109,13 +109,13 @@ public class GetAllScore extends AsyncTask{
                     listeScore.add(score);
                 }
             }
-            mode.getFirstC().setText("1er-"+listeScore.get(0));
-            mode.getSecondC().setText("2ème-"+listeScore.get(1));
-            mode.getThirdC().setText("3ème-"+listeScore.get(2));
+            mode.getFirstC().setText(listeScore.get(0));
+            mode.getSecondC().setText(listeScore.get(1));
+            mode.getThirdC().setText(listeScore.get(2));
 
-            mode.getFirstL().setText("1er-"+listeScore.get(3));
-            mode.getSecondL().setText("2ème-"+listeScore.get(4));
-            mode.getThirdL().setText("3ème-"+listeScore.get(5));
+            mode.getFirstL().setText(listeScore.get(3));
+            mode.getSecondL().setText(listeScore.get(4));
+            mode.getThirdL().setText(listeScore.get(5));
         }else{
             Toast.makeText(mode.getContext(), "Une erreur est survenue", Toast.LENGTH_SHORT).show();
         }

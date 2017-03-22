@@ -30,7 +30,7 @@ public class SwipePageAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
+    public String getPageTitle(int position) {
 
         if(position == 0){
             return "FACILE";

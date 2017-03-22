@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,6 +96,7 @@ public class GetScore extends AsyncTask{
             scoreMenu.getFacileValueL().setText("-");
             scoreMenu.getMoyenValueL().setText("-");
             scoreMenu.getDifficileValueL().setText("-");
+            Toast.makeText(scoreMenu.getContext(), "Pas de connexion internet", Toast.LENGTH_SHORT).show();
         }else {
             ArrayList<String> liste = (ArrayList<String>) params;
             scoreMenu.getFacileValue().setText(liste.get(0));

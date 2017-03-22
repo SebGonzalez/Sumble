@@ -5,10 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.unice.iutnice.sumble.Model.Connexion.GetAllScore;
 import fr.unice.iutnice.sumble.R;
@@ -27,6 +29,8 @@ public class Mode extends Fragment {
     private TextView secondL;
     private TextView thirdL;
 
+    private String difficulte;
+
     public static Mode newInstance(String diff) {
 
         Bundle args = new Bundle();
@@ -42,7 +46,8 @@ public class Mode extends Fragment {
         View view = inflater.inflate(R.layout.mode, container, false);
 
         savedInstanceState = getArguments();
-        String difficulte = savedInstanceState.getString("diff");
+
+        difficulte = savedInstanceState.getString("diff");
 
         firstC = (TextView)view.findViewById(R.id.firstC);
         secondC = (TextView)view.findViewById(R.id.secondC);
@@ -52,7 +57,26 @@ public class Mode extends Fragment {
         secondL = (TextView)view.findViewById(R.id.secondL);
         thirdL = (TextView)view.findViewById(R.id.thirdL);
 
+        if(isOnline()){
+            getAllScore();
+        }else{
+            Toast.makeText(getContext(), "Pas de connexion", Toast.LENGTH_SHORT).show();
+        }
+
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.v("onResume mode", "dedans");
+        if(isOnline()){
+            getAllScore();
+        }
+    }
+
+    public void getAllScore(){
+        new GetAllScore(this, difficulte).execute();
     }
 
     public TextView getFirstC() {
@@ -77,5 +101,11 @@ public class Mode extends Fragment {
 
     public TextView getThirdL() {
         return thirdL;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

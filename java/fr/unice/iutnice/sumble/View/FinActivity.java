@@ -30,6 +30,8 @@ public class FinActivity extends AppCompatActivity {
     private Button retourMenu;
     private TextView scoreFin;
     private Score score;
+    private boolean isSend;
+    private int cptSend=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +54,27 @@ public class FinActivity extends AppCompatActivity {
 
         if(isOnline()){
             envoyerScore();
+            cptSend ++;
+            isSend = true;
         }else{
-            Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onResume(){
-        if(isOnline()){
+        super.onResume();
+        if(isOnline() && cptSend==0){
             envoyerScore();
-            Toast.makeText(this, "Le score a été envoyé", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Le score a été envoyé", Toast.LENGTH_SHORT).show();
+            cptSend ++;
+            isSend = true;
         }else{
-            Toast.makeText(this, "Score non envoyé", Toast.LENGTH_SHORT);
+            if(isSend){
+                Toast.makeText(this, "Votre score a déjà été envoyé", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Score non envoyé", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

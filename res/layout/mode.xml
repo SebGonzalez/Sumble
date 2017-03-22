@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,112 +8,107 @@
     android:padding="10dp">
 
 
-    <RelativeLayout
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/third"
+        android:background="@drawable/third"
+        android:layout_below="@+id/second"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="19dp" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/second"
+        android:background="@drawable/second"
+        android:layout_below="@+id/first"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="13dp" />
+
+    <ImageView
+        android:id="@+id/first"
+        android:background="@drawable/first"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="44dp"
+        android:layout_height="25dp"
+        android:layout_width="25dp" />
+
+    <TextView
+        android:text="@string/challenge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="15dp">
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/first"
+        android:layout_marginStart="54dp"
+        android:id="@+id/textView7"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/thirdC"
-            android:layout_marginTop="30dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_below="@+id/secondC"
-            android:layout_alignStart="@+id/secondC" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/secondC"
-            android:textSize="16sp"
-            android:layout_marginTop="22dp"
-            android:textColor="@android:color/black"
-            android:layout_below="@+id/firstC"
-            android:layout_alignStart="@+id/firstC" />
-
-        <TextView
-            android:text="@string/challenge"
-            android:layout_width="wrap_content"
-            android:id="@+id/textView9"
-            android:layout_height="100dp"
-            android:layout_alignBottom="@+id/thirdC"
-            android:layout_alignParentStart="true"
-            android:textAlignment="center"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            android:background="@color/backgroundBleuClair"
-            android:padding="5dp"
-            android:layout_alignTop="@+id/firstC"
-            android:layout_marginStart="10dp" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/firstC"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="24dp"
-            android:layout_toEndOf="@+id/textView9" />
-    </RelativeLayout>
-
-    <RelativeLayout
+    <TextView
+        android:text="TextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/third"
+        android:layout_alignEnd="@+id/secondC"
+        android:id="@+id/thirdC"
+        android:textColor="@android:color/black" />
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/thirdL"
-            android:layout_marginTop="30dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_below="@+id/secondL"
-            android:layout_alignStart="@+id/secondL" />
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/secondC"
+        android:layout_alignBottom="@+id/second"
+        android:layout_alignStart="@+id/firstC"
+        android:textColor="@android:color/black" />
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/secondL"
-            android:textSize="16sp"
-            android:layout_marginTop="22dp"
-            android:textColor="@android:color/black"
-            android:layout_below="@+id/firstL"
-            android:layout_alignStart="@+id/firstL" />
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstC"
+        android:layout_alignBottom="@+id/first"
+        android:layout_alignStart="@+id/textView7"
+        android:textSize="14sp"
+        android:textColor="@android:color/black" />
 
-        <TextView
-            android:text="@string/limitless"
-            android:layout_width="wrap_content"
-            android:id="@+id/textView10"
-            android:layout_height="100dp"
-            android:layout_alignBottom="@+id/thirdL"
-            android:layout_alignParentStart="true"
-            android:textAlignment="center"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            android:background="@color/backgroundBleuClair"
-            android:padding="5dp"
-            android:layout_alignTop="@+id/firstL"
-            android:layout_marginStart="10dp" />
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/secondC"
+        android:layout_alignEnd="@+id/firstL"
+        android:id="@+id/secondL"
+        android:textColor="@android:color/black" />
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/firstL"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="24dp"
-            android:layout_toEndOf="@+id/textView10" />
-    </RelativeLayout>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/thirdC"
+        android:layout_alignStart="@+id/secondL"
+        android:id="@+id/thirdL"
+        android:textColor="@android:color/black" />
 
+    <TextView
+        android:text="@string/limitless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView8"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
-</LinearLayout>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstL"
+        android:textColor="@android:color/black"
+        android:layout_alignBaseline="@+id/firstC"
+        android:layout_alignBottom="@+id/firstC"
+        android:layout_alignStart="@+id/textView8" />
+</RelativeLayout>

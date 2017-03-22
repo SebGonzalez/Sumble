@@ -82,12 +82,9 @@ public class ScoreMenu extends Fragment {
         pager = (ViewPager)view.findViewById(R.id.modes);
         pager.setAdapter(new SwipePageAdapter(getFragmentManager(), getFragments()));
 
+
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshListener(this, imei));
-
-        /*GetScore getScore = new GetScore(this);
-        getScore.setParametre(imei);
-        getScore.execute();*/
 
         return view;
     }
