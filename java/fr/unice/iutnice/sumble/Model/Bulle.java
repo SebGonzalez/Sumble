@@ -34,9 +34,9 @@ public class Bulle implements Comparable {
     private int y;
     private int x;
 
-    private final Bitmap img;
-    private final Context c;
-    final DisplayMetrics metrics;
+    private Bitmap img;
+    private Context c;
+    DisplayMetrics metrics;
     int couleur;
 
     private boolean bloque = false;
@@ -45,14 +45,18 @@ public class Bulle implements Comparable {
 
     }*/
 
-    public Bulle(Context c, DisplayMetrics m) {
+    //constructeur utile pour le clone (évite de cloner des images qui sont des objets lourds en mémoire)
+    public Bulle(DisplayMetrics m) {
+        metrics = m;
+    }
+    public Bulle(Context c, DisplayMetrics m, int largeur) {
         metrics = m;
         this.c=c;
         Random r = new Random();
         // int valeur = r.nextInt((max - min) + 1) + min;
-        largeur = ConversionDpPixel.dpToPx(r.nextInt((80 - 50) + 1) + 50);
+        this.largeur = largeur;
         x = metrics.widthPixels/2;
-        y = 50;
+        y = ConversionDpPixel.dpToPx(60);
 
         //assignation de l'image
         final Bitmap bitmap =  BitmapFactory.decodeResource(c.getResources(), R.drawable.bulle);
@@ -76,10 +80,6 @@ public class Bulle implements Comparable {
 
     public void setValeur(int valeur) {this.valeur = valeur;}
 
-    public int getLargeur() {
-        return largeur;
-    }
-
     public int getY() {
         return y;
     }
@@ -98,6 +98,24 @@ public class Bulle implements Comparable {
 
     public void setCouleur(int couleur) {
         this.couleur = couleur;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int valeur) {
+        this.x = valeur;
+    }
+    public void setY(int valeur) {
+        this.y = valeur;
+    }
+
+    public void setLargeur(int valeur) {
+        this.largeur=valeur;
+    }
+    public int getLargeur() {
+        return largeur;
     }
 
     public void deplacementY(int valeur) throws Exception {
@@ -122,28 +140,13 @@ public class Bulle implements Comparable {
     }
 
     public Bulle clone()  {
-        Bulle b = new Bulle(c, metrics);
+        Bulle b = new Bulle(metrics);
         b.setX(x);
         b.setY(y);
-        b.setLargeur(largeur);
         b.setCouleur(couleur);
         b.setValeur(valeur);
-
+        b.setLargeur(largeur);
         return b;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int valeur) {
-        this.x = valeur;
-    }
-    public void setY(int valeur) {
-        this.y = valeur;
-    }
-    public void setLargeur(int valeur) {
-        this.valeur=valeur;
     }
 
     public Bitmap getImg() {

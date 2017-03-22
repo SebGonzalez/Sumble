@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -58,14 +59,15 @@ public class SurfaceViewIExpert extends SurfaceView implements SurfaceHolder.Cal
     private MediaPlayer mPlayer = null;
     private MediaPlayer mPlayerFond = null;
 
-    public SurfaceViewIExpert(GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
+    public SurfaceViewIExpert(GameActivity context, String mode, TypeDifficulte difficulte, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
+        this.context = context;
 
         mThread = new DrawingThread();
-        this.metrics = metrics;
-        this.context = context;
+        metrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         bulleFactory = new BulleFactory(context, metrics);
         this.mode = mode;
@@ -143,7 +145,7 @@ public class SurfaceViewIExpert extends SurfaceView implements SurfaceHolder.Cal
         int y = random.nextInt(5000);
         if (y < 500) {
 
-            Bulle bulle = new Bulle(this.getContext(), metrics);
+            Bulle bulle = new Bulle(this.getContext(), metrics, 5);
 
             Random rand = new Random();
 
@@ -483,13 +485,12 @@ public class SurfaceViewIExpert extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         final Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundw);
-        float scale = (float)background.getHeight()/(float)getHeight();
-        int newWidth = Math.round(background.getWidth()/scale);
-        int newHeight = Math.round(background.getHeight()/scale);
-        backgroundResize = Bitmap.createScaledBitmap(background, newWidth, newHeight, true);
+        backgroundResize = Bitmap.createScaledBitmap(background, metrics.widthPixels, metrics.heightPixels, true);
+        background.recycle();
 
         final Bitmap bitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.bulle);
         bulle = Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(60),ConversionDpPixel.dpToPx(60), false);
+        bitmap.recycle();
 
         //création du thread permettant l'actualisation de l'affichage
         mThread.keepDrawing = true;

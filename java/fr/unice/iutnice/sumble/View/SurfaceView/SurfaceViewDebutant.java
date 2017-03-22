@@ -39,9 +39,11 @@ import fr.unice.iutnice.sumble.Model.Bulle;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
+import fr.unice.iutnice.sumble.View.FinActivity;
 import fr.unice.iutnice.sumble.View.GameActivity;
 
 import static android.R.attr.max;
+import static android.R.attr.x;
 import static android.R.attr.y;
 import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
@@ -76,13 +78,18 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     private MediaPlayer mPlayer = null;
     private MediaPlayer mPlayerFond = null;
 
-    public SurfaceViewDebutant(GameActivity context, DisplayMetrics metrics, String mode, TypeDifficulte difficulte, String id) {
+    private boolean fin = false;
+
+    public SurfaceViewDebutant(GameActivity context, String mode, TypeDifficulte difficulte, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
+        this.context = context;
 
         mThread = new DrawingThread();
-        this.metrics = metrics;
+        metrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
         this.context = context;
 
         bulleFactory = new BulleFactory(context, metrics);
@@ -158,39 +165,43 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
     public void genererBulle() {
 
-        Random random = new Random();
-        int y = random.nextInt(5000);
-        if (y < 500) {
+            Random random = new Random();
+            int y = random.nextInt(5000);
+            if (y < 500) {
+                Random rand = new Random();
+                int largeur = rand.nextInt(ConversionDpPixel.dpToPx(40)) + ConversionDpPixel.dpToPx(40);
+                int x = rand.nextInt(metrics.widthPixels - largeur);
+                //Log.v("gen ", ""+bulleFactory.verifPossibiliteGen(x, metrics));
+                if (bulleFactory.verifPossibiliteGen(x, metrics)) {
 
-            Bulle bulle = new Bulle(this.getContext(), metrics);
 
-            Random rand = new Random();
+                    Bulle bulle = new Bulle(this.getContext(), metrics, largeur);
+                    bulle.setX(x);
 
-            int x = rand.nextInt(metrics.widthPixels - bulle.getLargeur());
-            bulle.setX(x);
-
-            if (bulleFactory.getListeBulle().size() > 0) {
-                if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
-                    int test[] = definirValeurBulle(true);
-                    bulle.setValeur(test[0]);
-                    bulle.setCouleur(test[1]);
-                    bulleFactory.getListeBulle().add(bulle);
+                    if (bulleFactory.getListeBulle().size() > 0) {
+                        if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
+                            int test[] = definirValeurBulle(true);
+                            bulle.setValeur(test[0]);
+                            bulle.setCouleur(test[1]);
+                            bulleFactory.getListeBulle().add(bulle);
+                        } else {
+                            return;
+                        }
+                    } else {
+                        int test[] = definirValeurBulle(true);
+                        bulle.setValeur(test[0]);
+                        bulle.setCouleur(test[1]);
+                        bulleFactory.getListeBulle().add(bulle);
+                    }
+                } else {
+                    fin = true;
                 }
-                else {
-                    return;
-                }
-            } else {
-                int test[] = definirValeurBulle(true);
-                bulle.setValeur(test[0]);
-                bulle.setCouleur(test[1]);
-                bulleFactory.getListeBulle().add(bulle);
             }
-        }
-        else {
-            return;
-        }
+            else
+                return;
+            }
 
-    }
+
 
     public int[] definirValeurBulle(boolean aleatoire) {
 
@@ -293,38 +304,13 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             score += modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
-
-            /*compteurValeurBulle.remove(0);
-            valeurAAtteindre.remove(0);
-            couleur.remove(0);*/
-           /* for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
-                if(bulleFactory.getListeBulle().get(i).getCouleur() == 0) {
-                    bulleFactory.getListeBulle().remove(i);
-                }
-                else
-                    bulleFactory.getListeBulle().get(i).setCouleur(bulleFactory.getListeBulle().get(i).getCouleur()-1);
-            }
-            if(index>0)
-                index--;*/
-            //definirValeurAAtteindre();
         }
         else if(sommeBulleTouche() == valeurAAtteindre.get(0)) {
             score += modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
-            /*compteurValeurBulle.remove(0);
-            valeurAAtteindre.remove(0);
-            couleur.remove(0);*/
-            /*for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
-                if(bulleFactory.getListeBulle().get(i).getCouleur() == 0) {
-                    bulleFactory.getListeBulle().remove(i);
-                }
-                else
-                    bulleFactory.getListeBulle().get(i).setCouleur(bulleFactory.getListeBulle().get(i).getCouleur()-1);
-            }*/
-            /*if(index>0)
-                index--;*/
-            //definirValeurAAtteindre();
+            if(score < -50)
+                fin = true;
         }
     }
 
@@ -456,33 +442,6 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     }
 
     public void update() throws Exception {
-        /*if(bulleFactory.getListeBulle().size() > 3 || score == -50.0) {
-            mThread.keepDrawing = false;
-
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                public void run() {
-
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.perdu);
-                    builder.setMessage(R.string.continuer);
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(context, FinActivity.class);
-                            intent.putExtra("score", score(score));
-                            intent.putExtra("id", id);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                            context.finish();
-                        }
-                    });
-                    builder.show();
-                }
-            });
-
-        }*/
         genererBulle();
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
@@ -502,13 +461,12 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         final Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.backgroundw);
-        float scale = (float)background.getHeight()/(float)getHeight();
-        int newWidth = Math.round(background.getWidth()/scale);
-        int newHeight = Math.round(background.getHeight()/scale);
-        backgroundResize = Bitmap.createScaledBitmap(background, newWidth, newHeight, true);
+        backgroundResize = Bitmap.createScaledBitmap(background, metrics.widthPixels, metrics.heightPixels, true);
+        background.recycle();
 
         final Bitmap bitmap =  BitmapFactory.decodeResource(getResources(), R.drawable.bulle);
         bulle = Bitmap.createScaledBitmap(bitmap, ConversionDpPixel.dpToPx(60),ConversionDpPixel.dpToPx(60), false);
+        bitmap.recycle();
 
         //création du thread permettant l'actualisation de l'affichage
         mThread.keepDrawing = true;
@@ -551,6 +509,35 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         mPlayerFond.start();
     }
 
+    public void verifFin() {
+        if(fin) {
+            mThread.keepDrawing = false;
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                public void run() {
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.perdu);
+                    builder.setMessage(R.string.continuer);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(context, FinActivity.class);
+                            intent.putExtra("score", score(score));
+                            intent.putExtra("id", id);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            context.finish();
+                        }
+                    });
+                    builder.show();
+                }
+            });
+        }
+    }
+
     private class DrawingThread extends Thread {
         // Utilisé pour arrêter le dessin quand il le faut
         boolean keepDrawing = true;
@@ -576,6 +563,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                             onDraw(canvas);
                             mSurfaceHolder.notify();
                         }
+                        verifFin();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

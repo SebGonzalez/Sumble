@@ -18,9 +18,6 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.game_layout);
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         String mode = getIntent().getStringExtra("mode");
         TypeDifficulte difficulte = getIntent().getParcelableExtra("difficulte");
         Log.v("difficulte GA", ""+difficulte);
@@ -28,15 +25,15 @@ public class GameActivity extends Activity {
         String id = getIntent().getStringExtra("id");
 
         if(difficulte.equals(TypeDifficulte.Facile)) {
-            SurfaceViewDebutant surface = new SurfaceViewDebutant(this, metrics, mode, difficulte, id);
+            SurfaceViewDebutant surface = new SurfaceViewDebutant(this, mode, difficulte, id);
             setContentView(surface);
         }
         else if(difficulte.equals(TypeDifficulte.Moyen)) {
-            SurfaceViewIntermediaire surface = new SurfaceViewIntermediaire(this, metrics, mode, difficulte, id);
+            SurfaceViewIntermediaire surface = new SurfaceViewIntermediaire(this, mode, difficulte, id);
             setContentView(surface);
         }
         else {
-            SurfaceViewIExpert surface = new SurfaceViewIExpert(this, metrics, mode, difficulte, id);
+            SurfaceViewIExpert surface = new SurfaceViewIExpert(this, mode, difficulte, id);
             setContentView(surface);
         }
 
