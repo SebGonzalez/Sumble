@@ -1,6 +1,7 @@
 package fr.unice.iutnice.sumble.View;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -97,6 +98,14 @@ public class MainActivity extends FragmentActivity{
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             fragments = getFragments();
         }
+
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null)
+            Toast.makeText(this, "Pas de Bluetooth",
+                    Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Avec Bluetooth",
+                    Toast.LENGTH_SHORT).show();
 
 
     }
