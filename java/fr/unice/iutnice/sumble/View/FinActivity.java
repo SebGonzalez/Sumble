@@ -21,6 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.klinker.android.send_message.Message;
+import com.klinker.android.send_message.Transaction;
+
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.R;
@@ -59,6 +62,7 @@ public class FinActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
+        envoyerScoreSMS();
     }
 
     @Override
@@ -76,6 +80,17 @@ public class FinActivity extends AppCompatActivity {
                 Toast.makeText(this, "Score non envoyé", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void envoyerScoreSMS(){
+        Toast.makeText(this, "sms en cours d'envoi !", Toast.LENGTH_SHORT).show();
+        String numero = "0635524762";
+        com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
+        settings.setUseSystemSending(true);
+        Transaction transaction = new Transaction(this, settings);
+        Message message = new Message("test", numero);
+        transaction.sendNewMessage(message, 0);
+        Toast.makeText(this, "sms envoyé au : "+numero, Toast.LENGTH_SHORT).show();
     }
 
     public void envoyerScore(){

@@ -6,43 +6,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.transition.Explode;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.iutnice.sumble.Controller.SwipePageAdapter;
-import fr.unice.iutnice.sumble.Model.Connexion.GetScore;
 import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 import fr.unice.iutnice.sumble.View.Fragments.ScoreMenu;
 import fr.unice.iutnice.sumble.View.Fragments.SettingsMenu;
-
-import static android.R.id.list;
 
 public class MainActivity extends FragmentActivity{
 
@@ -189,4 +174,5 @@ public class MainActivity extends FragmentActivity{
     private void requestPermission(String permissionName, int permissionRequestCode) {
         ActivityCompat.requestPermissions(this, new String[]{permissionName}, permissionRequestCode);
     }
+
 }

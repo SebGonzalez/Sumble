@@ -3,8 +3,8 @@
     <string name="param">Paramètres</string>
     <string name="scores">Scores</string>
     <string name="modeDeJeuTitre">Sélectionnez un mode de jeu</string>
-    <string name="limitless">Limitless</string>
-    <string name="challenge">Challenge</string>
+    <string name="limitless" translatable="false">Limitless</string>
+    <string name="challenge" translatable="false">Challenge</string>
     <string name="choixDiff">Choisissez la difficulté</string>
     <string name="facile">Facile</string>
     <string name="intermediaire">Intermédiaire</string>
@@ -19,4 +19,10 @@
     <string name="votreScore">Vous avez réalisé un score de </string>
     <string name="recommencer">Recommencer</string>
     <string name="retourMenu">Retour au menu</string>
+    <string name="reglages">Réglages</string>
+    <string name="langue">Langues</string>
+    <string name="francais">Français</string>
+    <string name="anglais">Anglais</string>
+    <string name="selectionLangue">Séléctionnez la langue</string>
+    <string name="traduire">Traduire</string>
 </resources>
