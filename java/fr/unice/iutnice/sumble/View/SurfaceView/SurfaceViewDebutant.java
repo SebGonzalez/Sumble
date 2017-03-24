@@ -73,6 +73,8 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     private ArrayList<Integer> valeurAAtteindre;
     private ArrayList<Integer[]> couleur = new ArrayList<>();
     private ArrayList<Bulle> bulleTouche;
+    private ArrayList<Integer> nombreCoup;
+    private ArrayList<Integer> nombreBulle;
     private int index = 0;
 
     private MediaPlayer mPlayer = null;
@@ -80,7 +82,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
     private boolean fin = false;
 
-    public SurfaceViewDebutant(GameActivity context, String mode, TypeDifficulte difficulte, String id) {
+    public SurfaceViewDebutant(GameActivity context, String mode, String id) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -94,17 +96,25 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
         bulleFactory = new BulleFactory(context, metrics);
         this.mode = mode;
-        this.difficulte = difficulte;
+        this.difficulte = TypeDifficulte.Facile;
         compteurValeurBulle = new ArrayList<>();
         valeurAAtteindre = new ArrayList<>();
         bulleTouche = new ArrayList<>();
+        if(mode.equals("Challenge")) {
+            nombreCoup = new ArrayList<>();
+            nombreBulle = new ArrayList<>();
+        }
 
-        for(int i=0; i<3; i++) {
+        for(int i=0; i<4; i++) {
             valeurAAtteindre.add(definirValeurAAtteindre());
             compteurValeurBulle.add(0);
             Random r = new Random();
             Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
             couleur.add(tabCouleur);
+            if(mode.equals("Challenge")) {
+                nombreCoup.add(definirNombreCoup());
+                nombreBulle.add(0);
+            }
         }
         this.id = id;
 
@@ -134,7 +144,11 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         paint.setColor(Color.BLACK);
         paint.setTextSize(ConversionDpPixel.dpToPx(25));
         canvas.drawText("Coups",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
-        canvas.drawText("0",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
+
+        if(mode.equals("Challenge"))
+            canvas.drawText(""+nombreCoup.get(0),  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
+        else
+            canvas.drawText("∞",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
         canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
         paint.setTextSize(ConversionDpPixel.dpToPx(15));
         paint.setColor(Color.WHITE);
@@ -167,13 +181,12 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
             Random random = new Random();
             int y = random.nextInt(5000);
-            if (y < 500) {
+            if (y < 100) {
                 Random rand = new Random();
                 int largeur = rand.nextInt(ConversionDpPixel.dpToPx(40)) + ConversionDpPixel.dpToPx(40);
                 int x = rand.nextInt(metrics.widthPixels - largeur);
                 //Log.v("gen ", ""+bulleFactory.verifPossibiliteGen(x, metrics));
                 if (bulleFactory.verifPossibiliteGen(x, metrics)) {
-
 
                     Bulle bulle = new Bulle(this.getContext(), metrics, largeur);
                     bulle.setX(x);
@@ -199,9 +212,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             }
             else
                 return;
-            }
-
-
+    }
 
     public int[] definirValeurBulle(boolean aleatoire) {
 
@@ -218,15 +229,40 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             randPos = index;
 
         if(compteurValeurBulle.get(randPos) != valeurAAtteindre.get(randPos)) {
-            Integer max = valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos);
+            Integer max = 0;
+
+            if(mode.equals("Challenge")) {
+                max = (valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos)) - (nombreCoup.get(randPos) - nombreBulle.get(randPos)-1);
+                Log.v("max", ""+max);
+                Log.v("diff", ""+(nombreCoup.get(randPos) - nombreBulle.get(randPos)));
+                Log.v("diff2", ""+ (valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos)));
+            }
+            else
+                max = (valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos));
+
             Integer randValeur = r.nextInt(max) + 1;
-            compteurValeurBulle.set(randPos, compteurValeurBulle.get(randPos) + randValeur);
+
+            if(mode.equals("Challenge") && nombreBulle.get(randPos) == nombreCoup.get(randPos)-1) {
+                randValeur = valeurAAtteindre.get(randPos) - compteurValeurBulle.get(randPos);
+                compteurValeurBulle.set(randPos, valeurAAtteindre.get(randPos));
+                nombreBulle.set(randPos, nombreCoup.get(randPos));
+            }
+            else
+                compteurValeurBulle.set(randPos, compteurValeurBulle.get(randPos) + randValeur);
+
+            if(mode.equals("Challenge"))
+                nombreBulle.set(randPos, nombreBulle.get(randPos)+1);
 
             if (compteurValeurBulle.get(randPos) == valeurAAtteindre.get(randPos) && randPos == index) {
                 compteurValeurBulle.add(0);
                 valeurAAtteindre.add(definirValeurAAtteindre());
                 Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
                 couleur.add(tabCouleur);
+                if(mode.equals("Challenge")) {
+                    nombreCoup.add(definirNombreCoup());
+                    nombreBulle.add(0);
+                }
+
                 index++;
             }
             int retour[] = {randValeur, randPos};
@@ -238,6 +274,23 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         }
         else
             return definirValeurBulle(false);
+    }
+
+    public int definirNombreCoup() {
+        Random r = new Random();
+        int nbCoup = r.nextInt(5 - 2) + 2;
+
+        if (nbCoup < valeurAAtteindre.get(valeurAAtteindre.size() - 1)) {
+            if (nombreCoup.size() > 1) {
+                if (nbCoup != nombreCoup.get(nombreCoup.size() - 1))
+                    return nbCoup;
+                else
+                    return definirNombreCoup();
+            } else
+                return nbCoup;
+        }
+        else
+            return  r.nextInt(valeurAAtteindre.get(valeurAAtteindre.size() - 1))+1;
     }
 
     public void etat() {
@@ -252,7 +305,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
     public int definirValeurAAtteindre() {
         Random r = new Random();
-        int valeur = r.nextInt(10)+1;
+        int valeur = r.nextInt(20)+1;
         if(!valeurAAtteindre.isEmpty()) {
             if (valeur != valeurAAtteindre.get(valeurAAtteindre.size() - 1)) {
                 return valeur;
@@ -304,13 +357,13 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             score += modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
+            if(score < -50)
+                fin = true;
         }
         else if(sommeBulleTouche() == valeurAAtteindre.get(0)) {
             score += modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
-            if(score < -50)
-                fin = true;
         }
     }
 
@@ -371,6 +424,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             if(valeurAAtteindre.get(bulleTouche.get(0).getCouleur()) != compteurValeurBulle.get(bulleTouche.get(0).getCouleur())) {
                 compteurValeurBulle.add(0);
                 valeurAAtteindre.add(definirValeurAAtteindre());
+                if(mode.equals("Challenge")) {
+                    nombreCoup.add(definirNombreCoup());
+                    nombreBulle.add(0);
+                }
                 Random r = new Random();
                 Integer tabCouleur[] = {(r.nextInt(255) + 1), (r.nextInt(255) + 1), (r.nextInt(255) + 1)};
                 couleur.add(tabCouleur);
@@ -379,6 +436,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             valeurAAtteindre.remove(bulleTouche.get(0).getCouleur());
             compteurValeurBulle.remove(bulleTouche.get(0).getCouleur());
             couleur.remove(bulleTouche.get(0).getCouleur());
+            if(mode.equals("Challenge")) {
+                nombreCoup.remove(bulleTouche.get(0).getCouleur());
+                nombreBulle.remove(bulleTouche.get(0).getCouleur());
+            }
 
             for (int y = 0; y < bulleFactory.getListeBulle().size(); y++) {
                 if (bulleFactory.getListeBulle().get(y).getCouleur() > bulleTouche.get(0).getCouleur()) {
@@ -396,6 +457,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                     if(valeurAAtteindre.get(bulleTouche.get(i).getCouleur()) != compteurValeurBulle.get(bulleTouche.get(i).getCouleur())) {
                         compteurValeurBulle.add(0);
                         valeurAAtteindre.add(definirValeurAAtteindre());
+                        if(mode.equals("Challenge")) {
+                            nombreCoup.add(definirNombreCoup());
+                            nombreBulle.add(0);
+                        }
                         Random r = new Random();
                         Integer tabCouleur[] = {(r.nextInt(255) + 1), (r.nextInt(255) + 1), (r.nextInt(255) + 1)};
                         couleur.add(tabCouleur);
@@ -406,6 +471,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                     valeurAAtteindre.remove(bulleTouche.get(i).getCouleur());
                     compteurValeurBulle.remove(bulleTouche.get(i).getCouleur());
                     couleur.remove(bulleTouche.get(i).getCouleur());
+                    if(mode.equals("Challenge")) {
+                        nombreCoup.remove(bulleTouche.get(i).getCouleur());
+                        nombreBulle.remove(bulleTouche.get(i).getCouleur());
+                    }
 
                     for (int y = 0; y < bulleFactory.getListeBulle().size(); y++) {
                         if (bulleFactory.getListeBulle().get(y).getCouleur() > bulleTouche.get(i).getCouleur()) {
@@ -420,6 +489,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         if(valeurAAtteindre.get(0) != compteurValeurBulle.get(0)) {
             compteurValeurBulle.add(0);
             valeurAAtteindre.add(definirValeurAAtteindre());
+            if(mode.equals("Challenge")) {
+                nombreCoup.add(definirNombreCoup());
+                nombreBulle.add(0);
+            }
             Random r = new Random();
             Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
             couleur.add(tabCouleur);
@@ -427,6 +500,10 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         valeurAAtteindre.remove(0);
         compteurValeurBulle.remove(0);
         couleur.remove(0);
+        if(mode.equals("Challenge")) {
+            nombreCoup.remove(bulleTouche.get(0).getCouleur());
+            nombreBulle.remove(bulleTouche.get(0).getCouleur());
+        }
         /*compteurValeurBulle.add(0);
         valeurAAtteindre.add(definirValeurAAtteindre());
         Random r = new Random();
@@ -509,8 +586,16 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         mPlayerFond.start();
     }
 
+    public void stopSound() {
+        mPlayer.stop();
+        mPlayer.release();
+        mPlayerFond.stop();
+        mPlayerFond.release();
+    }
+
     public void verifFin() {
         if(fin) {
+            stopSound();
             mThread.keepDrawing = false;
 
             Handler handler = new Handler(Looper.getMainLooper());
