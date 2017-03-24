@@ -1,7 +1,15 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -30,6 +38,9 @@ import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.IOException;
+import java.util.Set;
+
 import fr.unice.iutnice.sumble.Controller.ButtonChoixModeListener;
 import fr.unice.iutnice.sumble.Controller.ButtonStartListener;
 import fr.unice.iutnice.sumble.Controller.RadioButtonListener;
@@ -37,6 +48,7 @@ import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.MainActivity;
 
+import static android.app.Activity.RESULT_OK;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
@@ -122,8 +134,8 @@ public class GameMenu extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder infoWindow = new AlertDialog.Builder(getContext());
                 infoWindow.setTitle(R.string.infos);
-                infoWindow.setMessage("Débutant : Deux chiffres sont affichés dans la bulle, le premier correspond à la valeur de la bulle et le deuxième correspond à la valeur à atteindre avec ce chiffre. Les couleurs de chaque bulle permettent d’identifier les bulles à associer pour former le chiffre voulu.\n" +
-                        "Intermédiaire : Le deuxième chiffre n’est plus présent.\n" +
+                infoWindow.setMessage("Débutant : Deux chiffres sont affichés dans la bulle, le premier correspond à la valeur de la bulle et le deuxième correspond à la valeur à atteindre avec ce chiffre. Les couleurs de chaque bulle permettent d’identifier les bulles à associer pour former le chiffre voulu.\n\n" +
+                        "Intermédiaire : Le deuxième chiffre n’est plus présent.\n\n" +
                         "Expert : Le deuxième chiffre n’est plus présent et il n’y a plus les couleurs");
                 infoWindow.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -263,7 +275,7 @@ public class GameMenu extends Fragment {
     }
 
     private void playSound(int resId) {
-        if(mPlayer != null) {
+        if(mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.stop();
             mPlayer.release();
         }
@@ -274,7 +286,7 @@ public class GameMenu extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mPlayer != null) {
+        if(mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.stop();
             mPlayer.release();
         }

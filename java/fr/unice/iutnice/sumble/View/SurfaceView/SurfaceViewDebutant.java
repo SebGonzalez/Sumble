@@ -52,6 +52,10 @@ import static fr.unice.iutnice.sumble.R.drawable.bulle;
  */
 
 public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
+
+    private final int GENERATION_BULLE = 1000;
+    private final int VITESSE_DEPLACEMENT = 5;
+
     // Le holder
     SurfaceHolder mSurfaceHolder;
     // Le thread dans lequel le dessin se fera
@@ -170,7 +174,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
             canvas.drawBitmap(bulleFactory.getListeBulle().get(i).getImg(), bulleFactory.getListeBulle().get(i).getX(), bulleFactory.getListeBulle().get(i).getY(), paint);
-            paint.setTextSize(bulleFactory.getListeBulle().get(i).getLargeur() / 2);
+            paint.setTextSize(bulleFactory.getListeBulle().get(i).getLargeur() / 3);
             paint.setColor(Color.rgb(couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[0], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[1], couleur.get(bulleFactory.getListeBulle().get(i).getCouleur())[2]));
 
             canvas.drawText("" + bulleFactory.getListeBulle().get(i).getValeur() + "/" + valeurAAtteindre.get(bulleFactory.getListeBulle().get(i).getCouleur()), bulleFactory.getListeBulle().get(i).getX() + (bulleFactory.getListeBulle().get(i).getLargeur() / 2), (bulleFactory.getListeBulle().get(i).getY() + bulleFactory.getListeBulle().get(i).getLargeur() / 2) - (paint.descent() + paint.ascent() / 2), paint);
@@ -181,30 +185,31 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
             Random random = new Random();
             int y = random.nextInt(5000);
-            if (y < 100) {
+            if (y < GENERATION_BULLE) {
                 Random rand = new Random();
                 int largeur = rand.nextInt(ConversionDpPixel.dpToPx(40)) + ConversionDpPixel.dpToPx(40);
                 int x = rand.nextInt(metrics.widthPixels - largeur);
                 //Log.v("gen ", ""+bulleFactory.verifPossibiliteGen(x, metrics));
-                if (bulleFactory.verifPossibiliteGen(x, metrics)) {
+                if (bulleFactory.verifPossibiliteGen(largeur, metrics)) {
+                    if(bulleFactory.verifLigne(x, largeur)) {
+                        Bulle bulle = new Bulle(this.getContext(), metrics, largeur);
+                        bulle.setX(x);
 
-                    Bulle bulle = new Bulle(this.getContext(), metrics, largeur);
-                    bulle.setX(x);
-
-                    if (bulleFactory.getListeBulle().size() > 0) {
-                        if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
+                        if (bulleFactory.getListeBulle().size() > 0) {
+                            if (x > (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() + bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur()) || x < (bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getX() - bulleFactory.getListeBulle().get(bulleFactory.getListeBulle().size() - 1).getLargeur())) {
+                                int test[] = definirValeurBulle(true);
+                                bulle.setValeur(test[0]);
+                                bulle.setCouleur(test[1]);
+                                bulleFactory.getListeBulle().add(bulle);
+                            } else {
+                                return;
+                            }
+                        } else {
                             int test[] = definirValeurBulle(true);
                             bulle.setValeur(test[0]);
                             bulle.setCouleur(test[1]);
                             bulleFactory.getListeBulle().add(bulle);
-                        } else {
-                            return;
                         }
-                    } else {
-                        int test[] = definirValeurBulle(true);
-                        bulle.setValeur(test[0]);
-                        bulle.setCouleur(test[1]);
-                        bulleFactory.getListeBulle().add(bulle);
                     }
                 } else {
                     fin = true;
@@ -276,6 +281,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             return definirValeurBulle(false);
     }
 
+
     public int definirNombreCoup() {
         Random r = new Random();
         int nbCoup = r.nextInt(5 - 2) + 2;
@@ -340,8 +346,8 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                         bulleTouche.add(b);
                         //on supprime la bulle
                         bulleFactory.getListeBulle().remove(i);
+                        playSound(R.raw.eclatement);
                         verifPoint();
-
                         break;
                     }
                 }
@@ -354,16 +360,43 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         int sommeBulleTouche = sommeBulleTouche();
         if(sommeBulleTouche > valeurAAtteindre.get(0)) {
             playSound(R.raw.erreur);
-            score += modifScore();
+            score -= modifScore();
             supprimerBulleOutDated();
             bulleTouche.clear();
             if(score < -50)
                 fin = true;
         }
         else if(sommeBulleTouche() == valeurAAtteindre.get(0)) {
-            score += modifScore();
-            supprimerBulleOutDated();
-            bulleTouche.clear();
+            if(mode.equals("Challenge")) {
+                if(bulleTouche.size() == nombreBulle.get(0) && verifBulleToucheMemeCouleur()) {
+                    playSound(R.raw.oui);
+                    score += modifScore();
+                    supprimerBulleOutDated();
+                    bulleTouche.clear();
+                }
+                else {
+                    playSound(R.raw.erreur);
+                    score -= modifScore();
+                    supprimerBulleOutDated();
+                    bulleTouche.clear();
+                    if(score < -50)
+                        fin = true;
+                }
+            }
+            else if (verifBulleToucheMemeCouleur()){
+                playSound(R.raw.oui);
+                score += modifScore();
+                supprimerBulleOutDated();
+                bulleTouche.clear();
+            }
+            else {
+                playSound(R.raw.erreur);
+                score -= modifScore();
+                supprimerBulleOutDated();
+                bulleTouche.clear();
+                if(score < -50)
+                    fin = true;
+            }
         }
     }
 
@@ -378,19 +411,20 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
     public int modifScore() {
         int compteur = bulleTouche.get(0).getValeur();
-        boolean memeType = true;
 
         for(int i=1; i<bulleTouche.size(); i++) {
             compteur+= bulleTouche.get(i).getValeur();
-            if( bulleTouche.get(i).getCouleur() != bulleTouche.get(i-1).getCouleur())
-                memeType = false;
         }
 
-        if(memeType)
-            return compteur;
-        else {
-            return -compteur;
+        return compteur;
+    }
+
+    public boolean verifBulleToucheMemeCouleur() {
+        for(int i=1; i<bulleTouche.size(); i++) {
+            if( bulleTouche.get(i).getCouleur() != bulleTouche.get(i-1).getCouleur())
+                return false;
         }
+        return true;
     }
 
     public void supprimerBulleOutDated() {
@@ -522,7 +556,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         genererBulle();
 
         for(int i=0; i<bulleFactory.getListeBulle().size(); i++) {
-            bulleFactory.getListeBulle().get(i).deplacementY(5);
+            bulleFactory.getListeBulle().get(i).deplacementY(VITESSE_DEPLACEMENT);
         }
     }
 
@@ -587,15 +621,18 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     }
 
     public void stopSound() {
-        mPlayer.stop();
-        mPlayer.release();
-        mPlayerFond.stop();
-        mPlayerFond.release();
+        if(mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
+        if(mPlayerFond != null && mPlayerFond.isPlaying()) {
+            mPlayerFond.stop();
+            mPlayerFond.release();
+        }
     }
 
     public void verifFin() {
         if(fin) {
-            stopSound();
             mThread.keepDrawing = false;
 
             Handler handler = new Handler(Looper.getMainLooper());

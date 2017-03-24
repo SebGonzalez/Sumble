@@ -118,6 +118,7 @@ public class Bulle implements Comparable {
         return largeur;
     }
 
+
     public void deplacementY(int valeur) throws Exception {
 
        // Log.v("verif", "" + verifBulleEnDessous(getPositionListeBulle()));
@@ -131,7 +132,7 @@ public class Bulle implements Comparable {
                 if (verifBulleEnDessous(b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
                     this.setX(x + verifBulleEnDessous(this));
                 }
-                else if(y>300)
+                else
                     bloque = true;
             }
         }

@@ -21,6 +21,8 @@ import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.View.Fragments.ScoreMenu;
 import fr.unice.iutnice.sumble.View.GameActivity;
 
+import static fr.unice.iutnice.sumble.R.id.score;
+
 /**
  * Created by Gabriel on 15/03/2017.
  */
@@ -99,13 +101,37 @@ public class GetScore extends AsyncTask{
             Toast.makeText(scoreMenu.getContext(), "Pas de connexion internet", Toast.LENGTH_SHORT).show();
         }else {
             ArrayList<String> liste = (ArrayList<String>) params;
-            scoreMenu.getFacileValue().setText(liste.get(0));
-            scoreMenu.getMoyenValue().setText(liste.get(1));
-            scoreMenu.getDifficileValue().setText(liste.get(2));
+            if(!liste.get(0).equals("null"))
+                scoreMenu.getFacileValue().setText(liste.get(0));
+            else
+                scoreMenu.getFacileValue().setText("-");
 
-            scoreMenu.getFacileValueL().setText(liste.get(3));
-            scoreMenu.getMoyenValueL().setText(liste.get(4));
-            scoreMenu.getDifficileValueL().setText(liste.get(5));
+            if(liste.get(1).equals("null")) {
+                scoreMenu.getMoyenValue().setText("-");
+            }
+            else
+                scoreMenu.getMoyenValue().setText(liste.get(1));
+
+            if(!liste.get(2).equals("null"))
+                scoreMenu.getDifficileValue().setText(liste.get(2));
+            else
+                scoreMenu.getDifficileValue().setText("-");
+
+
+            if(!liste.get(3).equals("null"))
+                scoreMenu.getFacileValueL().setText(liste.get(3));
+            else
+                scoreMenu.getFacileValueL().setText("-");
+
+            if(!liste.get(4).equals("null"))
+                scoreMenu.getMoyenValueL().setText(liste.get(4));
+            else
+                scoreMenu.getMoyenValueL().setText("-");
+
+            if(!liste.get(5).equals("null"))
+                scoreMenu.getDifficileValueL().setText(liste.get(5));
+            else
+                scoreMenu.getDifficileValueL().setText("-");
         }
 
         scoreMenu.getSwipeRefreshLayout().setRefreshing(false);

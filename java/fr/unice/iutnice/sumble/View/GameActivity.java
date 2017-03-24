@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.SurfaceView;
 
 import fr.unice.iutnice.sumble.Model.TypeDifficulte;
 import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewDebutant;
@@ -13,41 +14,48 @@ import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewIntermediaire;
 
 public class GameActivity extends Activity {
 
+    SurfaceViewDebutant surfaceDebutant;
+    SurfaceViewIntermediaire surfaceIntermediaire;
+    SurfaceViewIExpert surfaceExpert;
+    TypeDifficulte difficulte;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.game_layout);
 
         String mode = getIntent().getStringExtra("mode");
-        TypeDifficulte difficulte = getIntent().getParcelableExtra("difficulte");
+        difficulte = getIntent().getParcelableExtra("difficulte");
 
         String id = getIntent().getStringExtra("id");
 
         if(difficulte.equals(TypeDifficulte.Facile)) {
-            SurfaceViewDebutant surface = new SurfaceViewDebutant(this, mode, id);
-            setContentView(surface);
+            surfaceDebutant = new SurfaceViewDebutant(this, mode, id);
+            setContentView(surfaceDebutant);
         }
         else if(difficulte.equals(TypeDifficulte.Moyen)) {
-            SurfaceViewIntermediaire surface = new SurfaceViewIntermediaire(this, mode, id);
-            setContentView(surface);
+            surfaceIntermediaire = new SurfaceViewIntermediaire(this, mode, id);
+            setContentView(surfaceIntermediaire);
         }
         else {
-            SurfaceViewIExpert surface = new SurfaceViewIExpert(this, mode, id);
-            setContentView(surface);
+            surfaceExpert = new SurfaceViewIExpert(this, mode, id);
+            setContentView(surfaceExpert);
         }
 
+    }
 
-        /*Score testScore = getIntent().getExtras().getParcelable("score"); // à supprimer
-
-        Log.v("score parcel", ""+testScore);
-        Log.v("type diff parcel", ""+testScore.getTypeDifficulte().toString());*/
-
-        //TEST - SendScore base de donnees
-        /*SendScore sendScore = new SendScore(this);
-        sendScore.setParametre(""+testScore.getValeur(), ""+testScore.getTypeDifficulte().toString(), getId(), "le mode");
-        Log.v("score exec", testScore.toString());
-        sendScore.execute();*/
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(difficulte.equals(TypeDifficulte.Facile)) {
+            surfaceDebutant.stopSound();
+        }
+        else if(difficulte.equals(TypeDifficulte.Moyen)) {
+            surfaceIntermediaire.stopSound();
+        }
+        else {
+            surfaceExpert.stopSound();
+        }
     }
 
 }

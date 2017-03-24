@@ -80,7 +80,7 @@ public class ScoreMenu extends Fragment {
         difficileValueL.setText("-");
 
         pager = (ViewPager)view.findViewById(R.id.modes);
-        pager.setAdapter(new SwipePageAdapter(getFragmentManager(), getFragments()));
+        pager.setAdapter(new SwipePageAdapter(getChildFragmentManager(), getFragments()));
 
 
         swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);

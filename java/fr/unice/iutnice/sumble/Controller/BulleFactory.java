@@ -61,7 +61,7 @@ public class BulleFactory {
         }
     }
 
-    public boolean verifPossibiliteGen(int x, DisplayMetrics metrics) {
+    /*public boolean verifPossibiliteGen(int x, DisplayMetrics metrics) {
         int compteur = 0;
         if(listeBulle.size() != 0) {
             for (int i = 0; i < listeBulle.size(); i++) {
@@ -78,11 +78,29 @@ public class BulleFactory {
                     }
                 }
             }
-            if (compteur >= compteurBulleEnHaut() && compteurBulleEnHaut()>4)
+            if (compteur >= compteurBulleEnHaut() && compteurBulleEnHaut()>4 && verifBulleBloque())
                 return false;
         }
         return true;
 
+    }*/
+
+    public boolean verifPossibiliteGen(int largeur, DisplayMetrics metrics) {
+        for (int i = 0; i < metrics.widthPixels; i+=metrics.widthPixels/5) {
+            if(verifLigne(i, largeur)) {
+                return true;
+            }
+        }
+        return !verifBulleBloque();
+
+    }
+
+    public boolean verifBulleBloque() {
+        for(int i=0; i<listeBulle.size(); i++) {
+            if(!listeBulle.get(i).isBloque())
+                return false;
+        }
+        return true;
     }
 
     public int compteurBulleEnHaut() {
@@ -103,27 +121,21 @@ public class BulleFactory {
         return compteur;
     }
 
-    public boolean verifPossibiliteGen(DisplayMetrics metrics) {
-        if(listeBulle.size() != 0) {
-            Log.v("x", ""+metrics.widthPixels);
-            Random r = new Random();
-            int depart = r.nextInt(ConversionDpPixel.dpToPx(40))+ConversionDpPixel.dpToPx(20);
-            for (int i = ConversionDpPixel.dpToPx(50); i < metrics.widthPixels-ConversionDpPixel.dpToPx(50); i += ConversionDpPixel.dpToPx(50)) {
-                if (verifLigne(i))
-                    return true;
-            }
-            return false;
-        }
-        return true;
-    }
-
-    public boolean verifLigne(int x) {
+    public boolean verifLigne(int x, int largeur) {
         for(int y=0; y<listeBulle.size(); y++) {
 
-            if (ConversionDpPixel.dpToPx(60) + ConversionDpPixel.dpToPx(20) > listeBulle.get(y).getY() && x> listeBulle.get(y).getX() && x < listeBulle.get(y).getX()+listeBulle.get(y).getLargeur())
-                return false;
+            if (ConversionDpPixel.dpToPx(60) + largeur >= listeBulle.get(y).getY() || ConversionDpPixel.dpToPx(60) >= listeBulle.get(y).getY()) {
+                if(x<=listeBulle.get(y).getX() && x+largeur>= listeBulle.get(y).getX() + listeBulle.get(y).getLargeur())
+                    return false;
+
+                else if ((x >= listeBulle.get(y).getX() && x <= listeBulle.get(y).getX() + listeBulle.get(y).getLargeur()) || (x + largeur >= listeBulle.get(y).getX() && x + largeur <= listeBulle.get(y).getX() + listeBulle.get(y).getLargeur()))
+                    return false;
+
+                else if( x>= listeBulle.get(y).getX() && x+largeur <= listeBulle.get(y).getLargeur())
+                    return false;
+
+            }
         }
-        Log.v("x", ""+x);
         return true;
     }
 }
