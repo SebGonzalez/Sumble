@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sumble</string>
+    <string name="anglais">Inglese</string>
+    <string name="bestScoreMondiaux">Migliori punteggi mondiali</string>
+    <string name="bestScorePerso">I miei migliori punteggi</string>
+    <string name="choixDiff">Scgeliere la difficolta</string>
+    <string name="continuer">Cliccare su ok per continuare</string>
+    <string name="difficile">Difficile</string>
+    <string name="facile">Facile</string>
+    <string name="finjeu">Fine del giocco</string>
+    <string name="francais">Frencese</string>
+    <string name="infos">Informazioni</string>
+    <string name="intermediaire">Medio</string>
+    <string name="lancerPartie">Giocare</string>
+    <string name="langue">Lingue</string>
+    <string name="modeDeJeuTitre">Scegliere il modo</string>
+    <string name="param">Parametri</string>
+    <string name="perdu">Hai perso !</string>
+    <string name="recommencer">Ricomminciare</string>
+    <string name="reglages">Parametri</string>
+    <string name="retourMenu">Tornare al menù</string>
+    <string name="scores">Punteggi</string>
+    <string name="selectionLangue">Scegliere la lingua</string>
+    <string name="traduire">Tradurre</string>
+    <string name="votreScore">Hai fatto un punteggio di</string>
+</resources>
