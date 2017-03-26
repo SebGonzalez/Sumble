@@ -18,11 +18,15 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Transaction;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
@@ -35,6 +39,8 @@ public class FinActivity extends AppCompatActivity {
     private Score score;
     private boolean isSend;
     private int cptSend=0;
+    private Button envoyer;
+    private EditText entrerNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,15 @@ public class FinActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
-        envoyerScoreSMS();
+        entrerNum = (EditText)findViewById(R.id.entrerNum);
+
+        envoyer = (Button)findViewById(R.id.envoyer);
+        envoyer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                envoyerScoreSMS(entrerNum.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -82,15 +96,21 @@ public class FinActivity extends AppCompatActivity {
         }
     }
 
-    public void envoyerScoreSMS(){
-        Toast.makeText(this, "sms en cours d'envoi !", Toast.LENGTH_SHORT).show();
-        String numero = "0635524762";
-        com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
-        settings.setUseSystemSending(true);
-        Transaction transaction = new Transaction(this, settings);
-        Message message = new Message("test", numero);
-        transaction.sendNewMessage(message, 0);
-        Toast.makeText(this, "sms envoyé au : "+numero, Toast.LENGTH_SHORT).show();
+    public void envoyerScoreSMS(String numero){
+        Pattern pattern = Pattern.compile("(\\+[0-9]{3}( [0-9][0-9])+)|([0-9]+)");
+        Matcher matcher = pattern.matcher(numero);
+        boolean numOk = matcher.matches();
+        if(numOk) {
+            Toast.makeText(this, "sms en cours d'envoi !", Toast.LENGTH_SHORT).show();
+            com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
+            settings.setUseSystemSending(true);
+            Transaction transaction = new Transaction(this, settings);
+            Message message = new Message("test", numero);
+            transaction.sendNewMessage(message, 0);
+            Toast.makeText(this, "SMS envoyé au : " + numero, Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "Veuillez entrer un numéro valide", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void envoyerScore(){

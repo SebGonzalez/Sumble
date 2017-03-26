@@ -24,4 +24,6 @@
     <string name="selectionLangue">Choose the language</string>
     <string name="votreScore">Your score is</string>
     <string name="traduire">Translate</string>
+    <string name="entrerNum">Enter a number</string>
+    <string name="envoyer">Send</string>
 </resources>

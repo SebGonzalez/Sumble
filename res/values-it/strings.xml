@@ -24,4 +24,6 @@
     <string name="selectionLangue">Scegliere la lingua</string>
     <string name="traduire">Tradurre</string>
     <string name="votreScore">Hai fatto un punteggio di</string>
+    <string name="entrerNum">Entri un numero</string>
+    <string name="envoyer">Inviare</string>
 </resources>
