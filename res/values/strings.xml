@@ -25,4 +25,6 @@
     <string name="anglais">Anglais</string>
     <string name="selectionLangue">Séléctionnez la langue</string>
     <string name="traduire">Traduire</string>
+    <string name="entrerNum">Entrez un numéro</string>
+    <string name="envoyer">Envoyer</string>
 </resources>
