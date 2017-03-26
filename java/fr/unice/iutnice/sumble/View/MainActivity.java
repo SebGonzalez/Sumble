@@ -55,9 +55,6 @@ public class MainActivity extends FragmentActivity{
         } else {
             Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
         }
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        }*/
 
         if(!isOnline()){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

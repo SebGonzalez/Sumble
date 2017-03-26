@@ -132,8 +132,19 @@ public class Bulle implements Comparable {
                 if (verifBulleEnDessous(b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
                     this.setX(x + verifBulleEnDessous(this));
                 }
-                else
+                /*else if(b.getX() < 0){
+                    this.setX(0);
+                    //this.setX(x + verifBulleEnDessous(this)/2);
                     bloque = true;
+                }
+                else if(b.getX()+largeur > metrics.widthPixels) {
+                    this.setX(metrics.widthPixels-largeur);
+                    bloque = true;
+                }*/
+                else {
+                    bloque = true;
+                }
+
             }
         }
         else

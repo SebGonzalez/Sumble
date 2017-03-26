@@ -2,6 +2,7 @@ package fr.unice.iutnice.sumble.View;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -35,6 +37,8 @@ public class FinActivity extends AppCompatActivity {
     private Score score;
     private boolean isSend;
     private int cptSend=0;
+
+    public final int MY_PERMISSIONS_REQUEST_READ_SMS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,21 @@ public class FinActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
-        envoyerScoreSMS();
+
+
+        int permissionCheck = ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_SMS);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
+                showExplanation("Permission Needed", "Rationale", Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
+            } else {
+                requestPermission(Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
+            }
+        } else {
+            Toast.makeText(FinActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
+            envoyerScoreSMS();
+        }
+        //envoyerScoreSMS();
     }
 
     @Override
@@ -106,6 +124,36 @@ public class FinActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_SMS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(FinActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    envoyerScoreSMS();
+
+                } else {
+                    Toast.makeText(FinActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
+    private void showExplanation(String title, String message, final String permission, final int permissionRequestCode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermission(permission, permissionRequestCode);
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestPermission(String permissionName, int permissionRequestCode) {
+        ActivityCompat.requestPermissions(this, new String[]{permissionName}, permissionRequestCode);
     }
 
 }

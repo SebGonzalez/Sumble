@@ -126,7 +126,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
     @Override
     protected void onDraw(Canvas canvas) {
-
+        etat();
         super.onDraw(canvas);
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
@@ -226,7 +226,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
         if(aleatoire) {
             if (valeurAAtteindre.size() > 1)
-                randPos = new Integer(r.nextInt(valeurAAtteindre.size() - 1));
+                randPos = new Integer(r.nextInt(valeurAAtteindre.size() - 1-index)+index);
             else
                 randPos = 0;
         }
@@ -258,7 +258,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             if(mode.equals("Challenge"))
                 nombreBulle.set(randPos, nombreBulle.get(randPos)+1);
 
-            if (compteurValeurBulle.get(randPos) == valeurAAtteindre.get(randPos) && randPos == index) {
+            if (compteurValeurBulle.get(randPos) == valeurAAtteindre.get(randPos)) {
                 compteurValeurBulle.add(0);
                 valeurAAtteindre.add(definirValeurAAtteindre());
                 Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
@@ -267,8 +267,8 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                     nombreCoup.add(definirNombreCoup());
                     nombreBulle.add(0);
                 }
-
-                index++;
+                if(randPos == index)
+                    index++;
             }
             int retour[] = {randValeur, randPos};
             return retour;
@@ -307,6 +307,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
             else
                 liste.add(new Boolean(false));
         }
+        Log.v("liste", ""+liste);
     }
 
     public int definirValeurAAtteindre() {

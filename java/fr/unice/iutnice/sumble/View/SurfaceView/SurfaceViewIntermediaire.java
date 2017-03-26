@@ -242,7 +242,7 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
             if(mode.equals("Challenge"))
                 nombreBulle.set(randPos, nombreBulle.get(randPos)+1);
 
-            if (compteurValeurBulle.get(randPos) == valeurAAtteindre.get(randPos) && randPos == index) {
+            if (compteurValeurBulle.get(randPos) == valeurAAtteindre.get(randPos)) {
                 compteurValeurBulle.add(0);
                 valeurAAtteindre.add(definirValeurAAtteindre());
                 Integer tabCouleur[] = {(r.nextInt(255)+1), (r.nextInt(255)+1), (r.nextInt(255)+1)};
@@ -252,7 +252,8 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
                     nombreBulle.add(0);
                 }
 
-                index++;
+                if(randPos == index)
+                    index++;
             }
             int retour[] = {randValeur, randPos};
             return retour;

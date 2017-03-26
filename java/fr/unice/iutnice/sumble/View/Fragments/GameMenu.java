@@ -98,10 +98,6 @@ public class GameMenu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        }
-
         View view = inflater.inflate(R.layout.page_jouer, container, false);
 
         ImageView titre = (ImageView)view.findViewById(R.id.logo);
