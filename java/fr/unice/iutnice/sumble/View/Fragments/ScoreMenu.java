@@ -1,12 +1,9 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +15,7 @@ import java.util.List;
 
 import fr.unice.iutnice.sumble.Controller.SwipePageAdapter;
 import fr.unice.iutnice.sumble.Controller.SwipeRefreshListener;
-import fr.unice.iutnice.sumble.Model.Connexion.GetScore;
-import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.R;
-import fr.unice.iutnice.sumble.View.MainActivity;
 
 /**
  * Created by Gabriel on 07/03/2017.

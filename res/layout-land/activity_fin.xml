@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_fin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fr.unice.iutnice.sumble.View.FinActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/backgroundBleuClair"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/titre">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_height="100dp"
+            android:background="@drawable/logo"
+            android:layout_width="130dp"
+            android:layout_above="@+id/modeJeuTitre"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/modeJeuTitre"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
+            android:background="@color/jaune"
+            android:fontFamily="Calibri"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/finjeu" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titre"
+        android:background="@color/backgroundBleuFonce">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="160dp"
+            android:id="@+id/entrerNum"
+            android:hint="@string/entrerNum" />
+
+        <Button
+            android:text="@string/envoyer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/envoyer"
+            android:layout_alignTop="@+id/entrerNum"
+            android:layout_alignEnd="@+id/retourMenu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/votreScore"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            tools:text="@string/votreScore"
+            android:layout_above="@+id/entrerNum"
+            android:layout_alignStart="@+id/retourMenu" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scoreFin"
+            android:textSize="30sp"
+            android:textColor="@color/jaune"
+            android:textAlignment="center"
+            android:layout_alignBottom="@+id/envoyer"
+            android:layout_toStartOf="@+id/entrerNum"
+            android:layout_marginEnd="45dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/retourMenu"
+            android:background="@drawable/backgroundbuttonjaune"
+            android:layout_marginRight="30dp"
+            android:text="@string/retourMenu"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
