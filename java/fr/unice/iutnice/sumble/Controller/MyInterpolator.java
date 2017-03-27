@@ -1,9 +1,17 @@
 package fr.unice.iutnice.sumble.Controller;
 
+/**
+ * Classe permettant de gérer notre animation
+ */
 public class MyInterpolator implements android.view.animation.Interpolator {
     double mAmplitude = 1;
     double mFrequency = 10;
 
+    /**
+     * Constructeur
+     * @param amplitude
+     * @param frequency
+     */
     MyInterpolator(double amplitude, double frequency) {
         mAmplitude = amplitude;
         mFrequency = frequency;

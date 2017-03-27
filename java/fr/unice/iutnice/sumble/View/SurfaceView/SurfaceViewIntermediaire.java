@@ -34,6 +34,8 @@ import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.FinActivity;
 import fr.unice.iutnice.sumble.View.GameActivity;
 
+import static android.R.attr.id;
+
 /**
  * Created by gonzo on 07/03/2017.
  */
@@ -56,8 +58,6 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
     Bitmap backgroundResize;
     Bitmap bulle;
 
-    private String id;
-
     private float score = 0F;
 
     private ArrayList<Integer> compteurValeurBulle;
@@ -73,7 +73,7 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
 
     private boolean fin = false;
 
-    public SurfaceViewIntermediaire(GameActivity context, String mode, String id) {
+    public SurfaceViewIntermediaire(GameActivity context, String mode) {
         super(context);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -83,7 +83,7 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
         metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        bulleFactory = new BulleFactory(context, metrics);
+        bulleFactory = new BulleFactory(metrics);
         this.mode = mode;
         this.difficulte = TypeDifficulte.Moyen;
         compteurValeurBulle = new ArrayList<>();
@@ -105,8 +105,6 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
                 nombreBulle.add(0);
             }
         }
-        this.id = id;
-
     }
 
     @Override
@@ -174,8 +172,8 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
             int largeur = rand.nextInt(ConversionDpPixel.dpToPx(40)) + ConversionDpPixel.dpToPx(40);
             int x = rand.nextInt(metrics.widthPixels - largeur);
             //Log.v("gen ", ""+bulleFactory.verifPossibiliteGen(x, metrics));
-            if (bulleFactory.verifPossibiliteGen(largeur, metrics)) {
-                if(bulleFactory.verifLigne(x, largeur)) {
+            if (bulleFactory.verifPossibiliteGen(largeur)) {
+                if(bulleFactory.verifPossibiliteGenPosition(x, largeur)) {
                     Bulle bulle = new Bulle(this.getContext(), metrics, largeur);
                     bulle.setX(x);
 
@@ -633,7 +631,6 @@ public class SurfaceViewIntermediaire extends SurfaceView implements SurfaceHold
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(context, FinActivity.class);
                             intent.putExtra("score", score(score));
-                            intent.putExtra("id", id);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                             context.finish();

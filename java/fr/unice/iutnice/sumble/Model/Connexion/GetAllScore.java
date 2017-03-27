@@ -28,13 +28,12 @@ import fr.unice.iutnice.sumble.View.GameActivity;
  * Created by Gabriel on 15/03/2017.
  */
 
+/**
+ * Classe permettant de récupérer les score depuis un fichier php
+ */
 public class GetAllScore extends AsyncTask{
 
     private static final String URL_ALLSCORE = "http://sebenforce.alwaysdata.net/projet_android/get_allscore.php";
-
-    private String parametre;
-
-    private ProgressDialog chargement;
 
     private URL url;
     private HttpURLConnection connection;
@@ -43,6 +42,11 @@ public class GetAllScore extends AsyncTask{
     private Mode mode;
     private String difficulte;
 
+    /**
+     * Constructeur
+     * @param mode
+     * @param difficulte
+     */
     public GetAllScore(Mode mode, String difficulte){
         this.mode = mode;
         this.difficulte = difficulte;
@@ -50,33 +54,41 @@ public class GetAllScore extends AsyncTask{
 
     @Override
     protected void onPreExecute() {
-
     }
 
+    /**
+     * Méthode travaillant en arrière plan
+     * @param params
+     * @return
+     */
     @Override
     protected Object doInBackground(Object[] params) {
 
         try {
+            //on créé un objet URL de la requête php
             url = new URL(URL_ALLSCORE);
-            Log.v("url", ""+url.toString());
+            //on établit une connexion à cette URL en get
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
 
+            //on récupère le résultat de la requête php
             int responseCode = connection.getResponseCode();
 
+            //si tout c'est bien passé
             if(responseCode == HttpURLConnection.HTTP_OK){
                 isOk = true;
-                Log.v("SendScore", "reponse ok");
                 String response = "";
                 String line;
 
+                //on récupère chaque caractère de la réponse
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 while((line = br.readLine()) != null){
                     response += line;
                 }
 
+                //on ajoute les informations dans une liste
                 ArrayList<ArrayList<String>> listeAL = new ArrayList<>();
 
                 listeAL.add(parseJson(response, "challenge", difficulte));
@@ -97,18 +109,24 @@ public class GetAllScore extends AsyncTask{
         return null;
     }
 
+    /**
+     * Méthode appelé lorsque la requête est terminé
+     * @param params
+     */
     @Override
     protected void onPostExecute(Object params){
 
         ArrayList<ArrayList<String>> listArrayList = (ArrayList<ArrayList<String>>) params;
         ArrayList<String> listeScore = new ArrayList<>();
 
+        //si la liste des score n'est pas vide on ajoute tous les socre dans la liste
         if(listeScore != null){
             for(int i=0 ; i<listArrayList.size() ; i++){
                 for(String score : listArrayList.get(i)){
                     listeScore.add(score);
                 }
             }
+            //on modifie la valeur des textView
             mode.getFirstC().setText(listeScore.get(0));
             mode.getSecondC().setText(listeScore.get(1));
             mode.getThirdC().setText(listeScore.get(2));
@@ -117,13 +135,18 @@ public class GetAllScore extends AsyncTask{
             mode.getSecondL().setText(listeScore.get(4));
             mode.getThirdL().setText(listeScore.get(5));
         }else{
+            //sinon on affiche une erreur
             Toast.makeText(mode.getContext(), "Une erreur est survenue", Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
 
+    /**
+     * Fonction qui gère le JSON
+     * @param resultat correspond à la chaine de caractère du json
+     * @param mode
+     * @param difficulte
+     * @return la liste des score du mode et de la difficulté indiqué
+     */
     public ArrayList<String> parseJson(String resultat, String mode, String difficulte){
         ArrayList<String>listeScore = new ArrayList<>();
         try {

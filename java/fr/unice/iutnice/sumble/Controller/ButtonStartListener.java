@@ -20,6 +20,8 @@ import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 import fr.unice.iutnice.sumble.View.GameActivity;
 import fr.unice.iutnice.sumble.View.MainActivity;
 
+import static android.R.attr.id;
+
 /**
  * Created by Gabriel on 09/03/2017.
  */
@@ -28,12 +30,10 @@ public class ButtonStartListener implements View.OnClickListener {
 
     private GameMenu gameMenu;
     private TypeDifficulte typeDifficulte;
-    private String id;
 
-    public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte, String id){
+    public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte){
         this.gameMenu = gameMenu;
         this.typeDifficulte = typeDifficulte;
-        this.id = id;
     }
 
     @Override

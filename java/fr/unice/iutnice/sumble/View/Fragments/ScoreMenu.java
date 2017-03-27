@@ -1,6 +1,10 @@
 package fr.unice.iutnice.sumble.View.Fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -52,8 +56,11 @@ public class ScoreMenu extends Fragment {
 
         View view = inflater.inflate(R.layout.page_score, container, false);
 
-        savedInstanceState = getArguments();
-        String imei = savedInstanceState.getString("id");
+        String imei = "";
+        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            savedInstanceState = getArguments();
+            imei = savedInstanceState.getString("id");
+        }
 
         facileValue = (TextView)view.findViewById(R.id.facileValue);
         facileValue.setText("-");
@@ -76,9 +83,10 @@ public class ScoreMenu extends Fragment {
         pager = (ViewPager)view.findViewById(R.id.modes);
         pager.setAdapter(new SwipePageAdapter(getChildFragmentManager(), getFragments()));
 
-
-        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshListener(this, imei));
+        if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshListener(this, imei));
+        }
 
         return view;
     }

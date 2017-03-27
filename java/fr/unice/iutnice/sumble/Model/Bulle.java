@@ -41,19 +41,17 @@ public class Bulle implements Comparable {
 
     private boolean bloque = false;
 
-    /*public Bulle() {
-
-    }*/
-
     //constructeur utile pour le clone (évite de cloner des images qui sont des objets lourds en mémoire)
     public Bulle(DisplayMetrics m) {
         metrics = m;
     }
+
+    /**
+     * constructeur
+     */
     public Bulle(Context c, DisplayMetrics m, int largeur) {
         metrics = m;
         this.c=c;
-        Random r = new Random();
-        // int valeur = r.nextInt((max - min) + 1) + min;
         this.largeur = largeur;
         x = metrics.widthPixels/2;
         y = ConversionDpPixel.dpToPx(60);
@@ -64,16 +62,7 @@ public class Bulle implements Comparable {
 
     }
 
-    public BitmapDrawable setImage(final Context c, final int ressource)
-    {
-        final Drawable dr = c.getResources().getDrawable(ressource);
-        final Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-        final BitmapDrawable bitmapDrawable = new BitmapDrawable(c.getResources(), Bitmap.createScaledBitmap(bitmap, largeur,largeur, false));
-
-       // bitmap.recycle();
-        return bitmapDrawable;
-    }
-
+    //getter et setter
     public int getValeur() {
         return valeur;
     }
@@ -117,18 +106,28 @@ public class Bulle implements Comparable {
     public int getLargeur() {
         return largeur;
     }
+    public Bitmap getImg() {
+        return img;
+    }
 
+    /**
+     * Fonction qui gère le déplacement des bulles
+     * @param valeur du déplacement
+     */
+    public void deplacementY(int valeur) {
 
-    public void deplacementY(int valeur) throws Exception {
-
-       // Log.v("verif", "" + verifBulleEnDessous(getPositionListeBulle()));
+        //si la bulle n'est pas tout en bas de l'écran et si elle n'est pas bloqué
         if( y+largeur <= metrics.heightPixels - ConversionDpPixel.dpToPx(25) && !bloque) {
+            //si il n'y a pas de bulle en dessous
             if (verifBulleEnDessous(this) == -1 ) {
+                //on incrémente y
                 this.y += ConversionDpPixel.dpToPx(valeur);
-                //resetBloque();
             } else {
+                //sinon on test sur une nouvelle bulle
                 Bulle b = this.clone();
+                //on applique l'écart entre les deux bulles
                 b.setX(b.getX() + verifBulleEnDessous(this));
+                //et si sur cette nouvelle bulle il n'y a pas de bulles en dessous ou qu'elle ne sort pas de l'écran on modifie la position de la bulle initiale
                 if (verifBulleEnDessous(b) == -1 && b.getX() > 0 && b.getX() + b.getLargeur() < metrics.widthPixels) {
                     this.setX(x + verifBulleEnDessous(this));
                 }
@@ -141,6 +140,7 @@ public class Bulle implements Comparable {
                     this.setX(metrics.widthPixels-largeur);
                     bloque = true;
                 }*/
+                //sinon on bloque la bulle
                 else {
                     bloque = true;
                 }
@@ -151,6 +151,10 @@ public class Bulle implements Comparable {
             bloque = true;
     }
 
+    /**
+     * Méthode standarde clone
+     * @return la bulle cloné
+     */
     public Bulle clone()  {
         Bulle b = new Bulle(metrics);
         b.setX(x);
@@ -161,10 +165,10 @@ public class Bulle implements Comparable {
         return b;
     }
 
-    public Bitmap getImg() {
-        return img;
-    }
-
+    /**
+     * Méthode de comparaison de bulle par rapport à l'attribut couleur
+     * @return 1 si la couleur est supérieur, -1 dans le cas contraire et 0 si elles sont égales
+     */
     @Override
     public int compareTo(Object o) {
         if(couleur > ((Bulle)o).getCouleur())
@@ -175,7 +179,4 @@ public class Bulle implements Comparable {
             return 0;
     }
 
-    public String toString() {
-        return ""+couleur;
-    }
 }

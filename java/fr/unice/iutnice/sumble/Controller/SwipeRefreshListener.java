@@ -33,8 +33,6 @@ public class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListene
                 getScore.setParametre(id);
                 getScore.execute();
 
-                /*GetAllScore getAllScore = new GetAllScore(scoreMenu);
-                getAllScore.execute();*/
             }
         }, 1000);
 

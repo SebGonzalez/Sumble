@@ -35,25 +35,30 @@ public class MainActivity extends FragmentActivity{
     private ViewPager viewPager;
     List<Fragment> fragments;
 
+    //utilisé pour demandé la permission
     public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //on assigne le layout
         setContentView(R.layout.activity_main);
 
+        //on récupère la liste des fragment de la page
         fragments = new ArrayList<Fragment>();
 
+        //on déclare la permission à vérifier (si l'utilisateur l'a autorisé
         int permissionCheck = ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE);
 
+        //si elle n'est pas encore autorisé
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                showExplanation("Permission Needed", "Rationale", Manifest.permission.READ_PHONE_STATE, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-            } else {
-                requestPermission(Manifest.permission.READ_PHONE_STATE, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-            }
+            requestPermission(Manifest.permission.READ_PHONE_STATE, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         } else {
-            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
+            fragments = getFragments();
+            pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
+            viewPager = (ViewPager) super.findViewById(R.id.viewpager);
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.setCurrentItem(1);
         }
 
         if(!isOnline()){
@@ -71,16 +76,6 @@ public class MainActivity extends FragmentActivity{
             Log.v("oui" , ""+isOnline());
         }
 
-        fragments = getFragments();
-        pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
-        viewPager = (ViewPager) super.findViewById(R.id.viewpager);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setCurrentItem(1);
-
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            fragments = getFragments();
-        }
-
     }
 
     @Override
@@ -92,20 +87,18 @@ public class MainActivity extends FragmentActivity{
 
     public List<Fragment> getFragments() {
         List<Fragment> list = new ArrayList<Fragment>();
-
         list.add(SettingsMenu.newInstance());
-        list.add(GameMenu.newInstance(getUniqueID()));
+        list.add(new GameMenu());
         list.add(ScoreMenu.newInstance(getUniqueID()));
         Log.v("id", getUniqueID());
         return list;
     }
 
-    public List<Fragment> getFragments2() {
+    public List<Fragment> getFragmentsSansId() {
         List<Fragment> list = new ArrayList<Fragment>();
-
         list.add(SettingsMenu.newInstance());
-        //list.add(GameMenu.newInstance(getUniqueID()));
-        //list.add(ScoreMenu.newInstance(getUniqueID()));
+        list.add(new GameMenu());
+        list.add(new ScoreMenu());
         return list;
     }
 
@@ -126,46 +119,25 @@ public class MainActivity extends FragmentActivity{
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-
-                } else {
-
-                    Toast.makeText(this, "Besoin de l'accord", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-
-        }
-    }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
                     fragments = getFragments();
+                    pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
+                    viewPager = (ViewPager) super.findViewById(R.id.viewpager);
+                    viewPager.setAdapter(pagerAdapter);
+                    viewPager.setCurrentItem(1);
                 } else {
-                    Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "La consultation et l'envoie des score ne sera pas possible si vous refusez !", Toast.LENGTH_SHORT).show();
+                    fragments = getFragmentsSansId();
+                    pagerAdapter = new SwipePageAdapter(super.getSupportFragmentManager(), fragments);
+                    viewPager = (ViewPager) super.findViewById(R.id.viewpager);
+                    viewPager.setAdapter(pagerAdapter);
+                    viewPager.setCurrentItem(1);
                 }
         }
-    }
-
-    private void showExplanation(String title, String message, final String permission, final int permissionRequestCode) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        requestPermission(permission, permissionRequestCode);
-                    }
-                });
-        builder.create().show();
     }
 
     private void requestPermission(String permissionName, int permissionRequestCode) {
