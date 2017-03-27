@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,6 +47,7 @@ import static android.R.attr.id;
 import static android.R.attr.max;
 import static android.R.attr.x;
 import static android.R.attr.y;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
 /**
@@ -54,8 +56,8 @@ import static fr.unice.iutnice.sumble.R.drawable.bulle;
 
 public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
 
-    private final int GENERATION_BULLE = 1000;
-    private final int VITESSE_DEPLACEMENT = 5;
+    private final int GENERATION_BULLE = 350;
+    private final int VITESSE_DEPLACEMENT = 1;
 
     // Le holder
     SurfaceHolder mSurfaceHolder;
@@ -136,7 +138,6 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        etat();
         super.onDraw(canvas);
         Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
         paint.setTextAlign(Paint.Align.CENTER);
@@ -426,41 +427,34 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                 fin = true;
         }
         //sinon si la somme vaut pile poile la valeur à atteindre (tout n'est pas encore gagné)
-        else if(sommeBulleTouche == valeurAAtteindre.get(0)) {
-            //si on est dans le mode challenge
-            if(mode.equals("Challenge")) {
-                //si on a touché le bon nombre de bulle et que c'est du même type alors bien joué mon gars
-                if(bulleTouche.size() == nombreBulle.get(0) && verifBulleToucheMemeCouleur()) {
-                    playSound(R.raw.oui);
-                    score += sommeBulleTouche;
-                    supprimerBulleOutDated();
-                    bulleTouche.clear();
-                }
-                //sinon c'est qu'on c'est trompé
-                else {
-                    playSound(R.raw.erreur);
-                    score -= sommeBulleTouche;
-                    supprimerBulleOutDated();
-                    bulleTouche.clear();
-                    if(score < -50)
-                        fin = true;
-                }
-            }
-            //sinon si on est dans le mode limitless et que les bulles sont de même couleur alors là aussi c'est bon
-            else if (verifBulleToucheMemeCouleur()){
+        else if(mode.equals("challenge")) {
+            if (sommeBulleTouche == valeurAAtteindre.get(0) && bulleTouche.size() == nombreCoup.get(0)) {
                 playSound(R.raw.oui);
                 score += sommeBulleTouche;
                 supprimerBulleOutDated();
                 bulleTouche.clear();
-            }
-            //sinon c'est perdu
-            else {
+            } else if (sommeBulleTouche() == valeurAAtteindre.get(0) && bulleTouche.size() != nombreCoup.get(0)) {
                 playSound(R.raw.erreur);
                 score -= sommeBulleTouche;
                 supprimerBulleOutDated();
                 bulleTouche.clear();
-                if(score < -50)
+                if (score < -50)
                     fin = true;
+            } else if (sommeBulleTouche() <= valeurAAtteindre.get(0) && bulleTouche.size() > nombreCoup.get(0)) {
+                playSound(R.raw.erreur);
+                score -= sommeBulleTouche;
+                supprimerBulleOutDated();
+                bulleTouche.clear();
+                if (score < -50)
+                    fin = true;
+            }
+        }
+        else {
+            if (sommeBulleTouche() == valeurAAtteindre.get(0)) {
+                playSound(R.raw.oui);
+                score += sommeBulleTouche;
+                supprimerBulleOutDated();
+                bulleTouche.clear();
             }
         }
     }
@@ -493,32 +487,38 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     /**
      * Fonction qui supprime les bulles qui ne doivent plus être là (ne pas lire si vous ne voulez pas avoir une attaque cardiaque, âme sensible s'abstenir)
      */
-    public void supprimerBulleOutDated() {
+    public synchronized void supprimerBulleOutDated() {
         //On trie la liste d'index décroissante
         Collections.sort(bulleTouche, Collections.reverseOrder());
+        String s = "";
+        for(Bulle b : bulleTouche) {
+            s += " " + b.getCouleur() + " ";
+        }
+        Log.v("Bulle touche ", s);
 
-        int e=0;
         //pour chaque bulle on supprime dans la liste à l'écran celle qui correspondent à la couleur de celle touché
+        ListIterator<Bulle> iterator = bulleFactory.getListeBulle().listIterator();
         for(int i=0; i<bulleTouche.size(); i++) {
-            while(e<bulleFactory.getListeBulle().size()) {
-                if(bulleTouche.get(i).getCouleur() == bulleFactory.getListeBulle().get(e).getCouleur()) {
-                    bulleFactory.getListeBulle().remove(e);
-                    e=0;
+            while(iterator.hasNext()) {
+                if(bulleTouche.get(i).getCouleur() == iterator.next().getCouleur()) {
+                    iterator.remove();
                 }
-                else
-                    e++;
             }
+            iterator = bulleFactory.getListeBulle().listIterator();
         }
 
+        String s2 = "";
+        for(Bulle b2 : bulleFactory.getListeBulle()) {
+            s2 += " " + b2.getCouleur() + " ";
+        }
+        Log.v("Reste après suppr ", s2);
+
         //si les bulles sont de couleur 0 (celle que l'utilisateur aurait du toucher) on les vire sans pression
-        int z=0;
-        while(z<bulleFactory.getListeBulle().size()) {
-            if(bulleFactory.getListeBulle().get(z).getCouleur() == 0) {
-                bulleFactory.getListeBulle().remove(z);
-                z=0;
+        ListIterator<Bulle> iterator2 = bulleFactory.getListeBulle().listIterator();
+        while(iterator2.hasNext()) {
+            if(iterator2.next().getCouleur() == 0) {
+                iterator2.remove();
             }
-            else
-                z++;
         }
 
         //si la première bulle n'est pas une de celle qu'on aurait dû toucher (on les a déjà viré au dessus)
@@ -610,8 +610,8 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
         compteurValeurBulle.remove(0);
         couleur.remove(0);
         if(mode.equals("Challenge")) {
-            nombreCoup.remove(bulleTouche.get(0).getCouleur());
-            nombreBulle.remove(bulleTouche.get(0).getCouleur());
+            nombreCoup.remove(0);
+            nombreBulle.remove(0);
         }
 
         if(index !=0)
