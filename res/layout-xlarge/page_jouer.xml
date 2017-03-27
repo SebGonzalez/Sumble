@@ -128,14 +128,24 @@
 
         </RelativeLayout>
 
+        <Button
+            android:text="@string/lancerPartie"
+            android:layout_width="300dp"
+            android:id="@+id/lancerPartie"
+            android:layout_height="70dp"
+            android:layout_above="@+id/score"
+            android:layout_centerHorizontal="true" />
+
         <RelativeLayout
-            android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_below="@+id/buttons"
-            android:layout_alignParentStart="true"
-            android:layout_margin="10dp"
             android:background="@drawable/backgrounddiff"
-            android:id="@+id/choixDiff">
+            android:id="@+id/choixDiff"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="43dp"
+            android:layout_width="400dp"
+            android:layout_below="@+id/buttons"
+            android:layout_centerHorizontal="true">
 
             <TextView
                 android:text="@string/choixDiff"
@@ -194,14 +204,6 @@
                 android:background="@drawable/info" />
 
         </RelativeLayout>
-
-        <Button
-            android:text="@string/lancerPartie"
-            android:layout_width="300dp"
-            android:id="@+id/lancerPartie"
-            android:layout_height="70dp"
-            android:layout_above="@+id/score"
-            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

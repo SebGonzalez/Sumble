@@ -23,6 +23,7 @@ import fr.unice.iutnice.sumble.R;
 
 /**
  * Created by Gabriel on 07/03/2017.
+ * Création du fragment du menu des scores
  */
 
 public class ScoreMenu extends Fragment {
@@ -41,6 +42,11 @@ public class ScoreMenu extends Fragment {
 
     private ImageView chevronLeft;
 
+    /**
+     * Constructeur normal
+     * @param id
+     * @return
+     */
     public static ScoreMenu newInstance(String id) {
 
         Bundle args = new Bundle();
@@ -81,8 +87,10 @@ public class ScoreMenu extends Fragment {
         difficileValueL.setText("-");
 
         pager = (ViewPager)view.findViewById(R.id.modes);
+        //on lie l'adapter du viewpager au viewpager
         pager.setAdapter(new SwipePageAdapter(getChildFragmentManager(), getFragments()));
 
+        //on check s'il a accepté les permissions READ_PHONE_STATE car on a besoin de son imei pour avoir ses scores persos
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshListener(this, imei));
@@ -115,6 +123,10 @@ public class ScoreMenu extends Fragment {
         return difficileValueL;
     }
 
+    /**
+     * Permet de créer la liste des fragments de score menu
+     * @return
+     */
     public List<Fragment> getFragments(){
         List<Fragment> list = new ArrayList<Fragment>();
 

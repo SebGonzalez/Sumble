@@ -12,6 +12,9 @@ import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewDebutant;
 import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewIExpert;
 import fr.unice.iutnice.sumble.View.SurfaceView.SurfaceViewIntermediaire;
 
+/**
+ * Activité dans laquelle le jeu se lance
+ */
 
 public class GameActivity extends Activity {
 
@@ -20,6 +23,10 @@ public class GameActivity extends Activity {
     SurfaceViewIExpert surfaceExpert;
     TypeDifficulte difficulte;
 
+    /**
+     * Création de l'activité
+     * @param savedInstanceState : bundle pour récupérer les put des Intents
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +35,7 @@ public class GameActivity extends Activity {
         String mode = getIntent().getStringExtra("mode");
         difficulte = getIntent().getParcelableExtra("difficulte");
 
+        //lancement du mode en fonction des modes choisis
         if(difficulte.equals(TypeDifficulte.Facile)) {
             surfaceDebutant = new SurfaceViewDebutant(this, mode);
             setContentView(surfaceDebutant);
@@ -51,6 +59,9 @@ public class GameActivity extends Activity {
 
     }
 
+    /**
+     * Si le jeu est mis "en pause", on coupe le son
+     */
     @Override
     protected void onPause() {
         super.onPause();

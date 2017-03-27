@@ -29,6 +29,9 @@ import fr.unice.iutnice.sumble.View.Fragments.GameMenu;
 import fr.unice.iutnice.sumble.View.Fragments.ScoreMenu;
 import fr.unice.iutnice.sumble.View.Fragments.SettingsMenu;
 
+/**
+ * Activité de départ
+ */
 public class MainActivity extends FragmentActivity{
 
     private PagerAdapter pagerAdapter;
@@ -38,6 +41,10 @@ public class MainActivity extends FragmentActivity{
     //utilisé pour demandé la permission
     public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
 
+    /**
+     * Création de l'activité de démarrage
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +92,10 @@ public class MainActivity extends FragmentActivity{
 
     }
 
+    /**
+     * La liste des fragments s'il accepte les permissions
+     * @return
+     */
     public List<Fragment> getFragments() {
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(SettingsMenu.newInstance());
@@ -94,6 +105,10 @@ public class MainActivity extends FragmentActivity{
         return list;
     }
 
+    /**
+     * La liste des fragments s'il n'accepte pas les permissions
+     * @return
+     */
     public List<Fragment> getFragmentsSansId() {
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(SettingsMenu.newInstance());
@@ -102,6 +117,10 @@ public class MainActivity extends FragmentActivity{
         return list;
     }
 
+    /**
+     * Récupérer l'imei de l'utilisateur
+     * @return
+     */
     public String getUniqueID(){
         String myAndroidDeviceId = "";
         TelephonyManager mTelephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -113,12 +132,22 @@ public class MainActivity extends FragmentActivity{
         return myAndroidDeviceId;
     }
 
+    /**
+     * Est-il connecté ?
+     * @return : true si oui, false sinon
+     */
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * Après la demande des permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -140,6 +169,11 @@ public class MainActivity extends FragmentActivity{
         }
     }
 
+    /**
+     * Demande de permissions
+     * @param permissionName
+     * @param permissionRequestCode
+     */
     private void requestPermission(String permissionName, int permissionRequestCode) {
         ActivityCompat.requestPermissions(this, new String[]{permissionName}, permissionRequestCode);
     }

@@ -17,6 +17,7 @@ import fr.unice.iutnice.sumble.R;
 
 /**
  * Created by Gabriel on 19/03/2017.
+ * Fragment qui va afficher les scores mondiaux selon les difficultés
  */
 
 public class Mode extends Fragment {
@@ -31,6 +32,12 @@ public class Mode extends Fragment {
 
     private String difficulte;
 
+    /**
+     * Constructeur normal
+     * Créé une instance du fragment mode qui sera directement ajouté dans la liste présente dans scoreMenu
+     * @param diff : diffuclté (pour qu'on sache dans quelle onglet le mettre)
+     * @return
+     */
     public static Mode newInstance(String diff) {
 
         Bundle args = new Bundle();
@@ -41,13 +48,20 @@ public class Mode extends Fragment {
         return fragment;
     }
 
+    /**
+     * Appelée lors de la création de l'instance de Mode
+     * @param inflater
+     * @param container
+     * @param savedInstanceState : bundle pour récupérer la difficulté passée en paramètres
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mode, container, false);
 
-        savedInstanceState = getArguments();
+        savedInstanceState = getArguments(); //on récupère les arguments ajoutés dans newInstance()
 
-        difficulte = savedInstanceState.getString("diff");
+        difficulte = savedInstanceState.getString("diff"); //on utilise le bundle pour récup la difficulté
 
         firstC = (TextView)view.findViewById(R.id.firstC);
         secondC = (TextView)view.findViewById(R.id.secondC);
@@ -57,6 +71,7 @@ public class Mode extends Fragment {
         secondL = (TextView)view.findViewById(R.id.secondL);
         thirdL = (TextView)view.findViewById(R.id.thirdL);
 
+        //on vérifie s'il est connecté avant d'effectuer la requête pour récup les scores
         if(isOnline()){
             getAllScore();
         }else{
@@ -66,10 +81,13 @@ public class Mode extends Fragment {
         return view;
     }
 
+    /**
+     * Si l'utilisateur revient sur l'appli en étant connecté, on effectue la requête
+     */
     @Override
     public void onResume(){
         super.onResume();
-        Log.v("onResume mode", "dedans");
+        //Log.v("onResume mode", "dedans");
         if(isOnline()){
             getAllScore();
         }
@@ -103,6 +121,10 @@ public class Mode extends Fragment {
         return thirdL;
     }
 
+    /**
+     * Vérifie la connexion de l'utilisateur
+     * @return : true si en ligne & false si hors ligne
+     */
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();

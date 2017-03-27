@@ -53,6 +53,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * Created by Gabriel on 07/03/2017.
+ * Menu du jeu : Fragment
  */
 
 public class GameMenu extends Fragment {
@@ -82,10 +83,18 @@ public class GameMenu extends Fragment {
 
     private MediaPlayer mPlayer = null;
 
+    /**
+     * Appelée à la création du fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return : la vue à dessiner à l'écran
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //récupère le layout page_jouer pour l'afficher et connaître ses widgets
         View view = inflater.inflate(R.layout.page_jouer, container, false);
 
         ImageView titre = (ImageView)view.findViewById(R.id.logo);
@@ -96,7 +105,7 @@ public class GameMenu extends Fragment {
             }
         });
 
-
+        //on crée les listeners, et on lie nos variables aux widgets présents sur le layout
         limitless = (Button)view.findViewById(R.id.limitless);
         challenge = (Button)view.findViewById(R.id.challenge);
 
@@ -116,11 +125,12 @@ public class GameMenu extends Fragment {
         infosDiff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //au click sur infosDiff, on affiche une fenêtre d'informations sur les modes de jeu
                 AlertDialog.Builder infoWindow = new AlertDialog.Builder(getContext());
                 infoWindow.setTitle(R.string.infos);
                 infoWindow.setMessage("Débutant : Deux chiffres sont affichés dans la bulle, le premier correspond à la valeur de la bulle et le deuxième correspond à la valeur à atteindre avec ce chiffre. Les couleurs de chaque bulle permettent d’identifier les bulles à associer pour former le chiffre voulu.\n\n" +
                         "Intermédiaire : Le deuxième chiffre n’est plus présent.\n\n" +
-                        "Expert : Le deuxième chiffre n’est plus présent et il n’y a plus les couleurs");
+                        "Difficile : Le deuxième chiffre n’est plus présent et il n’y a plus les couleurs");
                 infoWindow.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -171,6 +181,10 @@ public class GameMenu extends Fragment {
         return view;
     }
 
+    /**
+     * fonction de sauvegarde
+     * @param outState : bundle pour récupéré les objets passé dans les intents
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -255,6 +269,9 @@ public class GameMenu extends Fragment {
         lancerPartie.setOnClickListener(buttonStartListener);
     }
 
+    /**
+     * fonction qui joue un son depuis les ressources
+     */
     private void playSound(int resId) {
         if(mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.stop();
@@ -264,6 +281,9 @@ public class GameMenu extends Fragment {
         mPlayer.start();
     }
 
+    /**
+     * onPause met en pause le jeu
+     */
     @Override
     public void onPause() {
         super.onPause();

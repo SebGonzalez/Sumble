@@ -43,7 +43,7 @@ public class SendScore extends AsyncTask{
     }
 
     /**
-     * Fonction qui est appelé avant que la tâche soit effectué
+     * Fonction qui est appelée avant que la tâche soit effectuée
      */
     @Override
     protected void onPreExecute() {
@@ -83,6 +83,10 @@ public class SendScore extends AsyncTask{
         return null;
     }
 
+    /**
+     * On cache le chargement
+     * @param params
+     */
     @Override
     protected void onPostExecute(Object params){
         chargement.hide();

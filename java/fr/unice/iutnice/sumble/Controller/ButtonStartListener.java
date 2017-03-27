@@ -31,6 +31,12 @@ public class ButtonStartListener implements View.OnClickListener {
     private GameMenu gameMenu;
     private TypeDifficulte typeDifficulte;
 
+    /**
+     * Constructeur normal
+     * Listener sur le bouton pour lancer la partie
+     * @param gameMenu : fragment
+     * @param typeDifficulte : enumération des types de difficulté
+     */
     public ButtonStartListener(GameMenu gameMenu, TypeDifficulte typeDifficulte){
         this.gameMenu = gameMenu;
         this.typeDifficulte = typeDifficulte;
@@ -40,19 +46,18 @@ public class ButtonStartListener implements View.OnClickListener {
     public void onClick(View v) {
 
         Intent intent = new Intent(gameMenu.getActivity(), GameActivity.class);
-        Log.v("checked diff", ""+gameMenu.getCheckedDiff());
+        //Log.v("checked diff", ""+gameMenu.getCheckedDiff());
 
-        if(gameMenu.getLimitlessChoisi())
+        if(gameMenu.getLimitlessChoisi()) //on passe à l'intent le mode choisi...
             intent.putExtra("mode", "Limitless");
         else
             intent.putExtra("mode", "Challenge");
 
         Log.v("difficulte onClick", ""+typeDifficulte.toString());
-        intent.putExtra("difficulte", (Parcelable) typeDifficulte);
-        intent.putExtra("id", id);
+        intent.putExtra("difficulte", (Parcelable) typeDifficulte); //...ainsi que la difficulté
 
         gameMenu.startActivity(intent);
-        gameMenu.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        gameMenu.getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out); //transition que nous avons créé
 
     }
 }

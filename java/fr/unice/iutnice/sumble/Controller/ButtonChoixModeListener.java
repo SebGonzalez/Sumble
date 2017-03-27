@@ -22,6 +22,10 @@ public class ButtonChoixModeListener implements View.OnClickListener {
 
     private GameMenu gameMenu;
 
+    /**
+     * Listener sur les boutons de choix du mode
+     * @param gameMenu : context
+     */
     public ButtonChoixModeListener(GameMenu gameMenu){
         this.gameMenu = gameMenu;
     }
@@ -44,10 +48,10 @@ public class ButtonChoixModeListener implements View.OnClickListener {
         gameMenu.getInfosDiff().setVisibility(View.VISIBLE);
         gameMenu.getChoixDiff().setVisibility(View.VISIBLE);
 
-        Animation myAnim = AnimationUtils.loadAnimation(gameMenu.getContext(), R.anim.bouton_presse);
-        MyInterpolator myInterpolator = new MyInterpolator(0.2, 15);
-        myAnim.setInterpolator(myInterpolator);
-        v.startAnimation(myAnim);
+        Animation myAnim = AnimationUtils.loadAnimation(gameMenu.getContext(), R.anim.bouton_presse); //charge l'animation depuis les resources
+        MyInterpolator myInterpolator = new MyInterpolator(0.2, 15); //interpolator que nous avons créé
+        myAnim.setInterpolator(myInterpolator); //on lie l'interpolator à l'animation
+        v.startAnimation(myAnim); //démarre l'animation
 
 
     }

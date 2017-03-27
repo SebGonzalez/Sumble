@@ -34,6 +34,9 @@ import fr.unice.iutnice.sumble.Model.Connexion.SendScore;
 import fr.unice.iutnice.sumble.Model.Score;
 import fr.unice.iutnice.sumble.R;
 
+/**
+ * Gère la fin du jeu
+ */
 public class FinActivity extends AppCompatActivity {
 
     private Button retourMenu;
@@ -46,14 +49,19 @@ public class FinActivity extends AppCompatActivity {
 
     public final int MY_PERMISSIONS_REQUEST_READ_SMS = 1;
 
+    /**
+     * Creation de la vue
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fin);
 
-        score = getIntent().getExtras().getParcelable("score");
+        score = getIntent().getExtras().getParcelable("score"); //on recup le score qui est Parcelable
 
         retourMenu = (Button)findViewById(R.id.retourMenu);
+        //au click, retourne au menu
         retourMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +73,7 @@ public class FinActivity extends AppCompatActivity {
         scoreFin = (TextView)findViewById(R.id.scoreFin);
         scoreFin.setText(score.getValeur()+"");
 
+        //verification de la connexion
         if(isOnline()){
             if(ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
                 envoyerScore(getUniqueID());
@@ -77,11 +86,13 @@ public class FinActivity extends AppCompatActivity {
         entrerNum = (EditText)findViewById(R.id.entrerNum);
 
         envoyer = (Button)findViewById(R.id.envoyer);
+        //on peut envoyer son score au numéro entré dans l'EditText
         envoyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int permissionCheck = ActivityCompat.checkSelfPermission(FinActivity.this,Manifest.permission.READ_SMS);
 
+                //on vérifie les permissions encore et toujours...
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(FinActivity.this, Manifest.permission.READ_SMS)) {
                         showExplanation("Permission", "Vous devez accepter pour envoyer votre score par message", Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
@@ -89,14 +100,20 @@ public class FinActivity extends AppCompatActivity {
                         requestPermission(Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
                     }
                 } else {
+                    //si elles sont acceptées, on peut envoyer le score par message
                     envoyerScoreSMS(entrerNum.getText().toString());
                 }
             }
         });
     }
 
+    /**
+     * Au retour sur l'application
+     */
     @Override
     public void onResume(){
+        //on renvoie le score à la base de donnée s'il n'a pas pu le faire avant
+        //s'il a déjà fait, on ne renvoie rien évidemment
         super.onResume();
         if(isOnline() && cptSend==0){
             if(ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
@@ -113,11 +130,20 @@ public class FinActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fonction pour envoyer un sms
+     * @param numero : numero auquel envoyer le sms
+     */
     public void envoyerScoreSMS(String numero){
+        //pour envoyer un SMS, nous avons utilisé une libraire appelée klinker send_message
+
+        //expression régulière pour vérifier qu'il s'agit bien d'un numéro de téléphone
         Pattern pattern = Pattern.compile("(\\+[0-9]{3}( [0-9][0-9])+)|([0-9]+)");
         Matcher matcher = pattern.matcher(numero);
         boolean numOk = matcher.matches();
+
         if(numOk) {
+            //si c'est un numéro correct...
             com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
             settings.setUseSystemSending(true);
             Transaction transaction = new Transaction(this, settings);
@@ -125,22 +151,37 @@ public class FinActivity extends AppCompatActivity {
             transaction.sendNewMessage(message, 0);
             Toast.makeText(this, "SMS envoyé au : " + numero, Toast.LENGTH_SHORT).show();
         }else {
+            //sinon...
             Toast.makeText(this, "Veuillez entrer un numéro valide", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Envoyer score au serveur
+     * @param id
+     */
     public void envoyerScore(String id){
         SendScore sendScore = new SendScore(this);
         sendScore.setParametre(""+score.getValeur(), ""+score.getTypeDifficulte().toString(), id, score.getMode());
         sendScore.execute();
     }
 
+    /**
+     * Est en ligne ?
+     * @return
+     */
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * Après la demande de permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {

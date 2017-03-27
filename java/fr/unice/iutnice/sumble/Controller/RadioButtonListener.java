@@ -21,6 +21,11 @@ public class RadioButtonListener implements RadioGroup.OnCheckedChangeListener{
 
     private GameMenu gameMenu;
 
+    /**
+     * Constructeur normal
+     * Listener sur les radions button du menu
+     * @param gameMenu : fragment
+     */
     public RadioButtonListener(GameMenu gameMenu){
         this.gameMenu = gameMenu;
     }
@@ -30,6 +35,7 @@ public class RadioButtonListener implements RadioGroup.OnCheckedChangeListener{
 
         gameMenu.getLancerPartie().setVisibility(View.VISIBLE);
 
+        //on va vérifier quel radioButton est coché
         if(group.getCheckedRadioButtonId() == gameMenu.getFacile().getId()){
             gameMenu.setCheckedDiff(TypeDifficulte.Facile);
         }else if(group.getCheckedRadioButtonId() == gameMenu.getMoyen().getId()){
@@ -37,6 +43,6 @@ public class RadioButtonListener implements RadioGroup.OnCheckedChangeListener{
         }else if(group.getCheckedRadioButtonId() == gameMenu.getDifficile().getId()){
             gameMenu.setCheckedDiff(TypeDifficulte.Difficile);
         }
-        gameMenu.setButtonStartListener();
+        gameMenu.setButtonStartListener(); //on fait apparaître le bouton pour démarrer le jeu
     }
 }

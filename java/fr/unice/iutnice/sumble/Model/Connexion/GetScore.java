@@ -25,6 +25,8 @@ import static fr.unice.iutnice.sumble.R.id.score;
 
 /**
  * Created by Gabriel on 15/03/2017.
+ * Récupère le contenu du json à l'adresse indiquée
+ * Permet de récupérer les scores persos de l'utilisateur
  */
 
 public class GetScore extends AsyncTask{
@@ -40,37 +42,44 @@ public class GetScore extends AsyncTask{
 
     private ScoreMenu scoreMenu;
 
-    public GetScore(ScoreMenu scoreMenu){
+    /**
+     * Constructeur normal
+     * @param scoreMenu : fragment dans lequel cette méthode est appelée
+     */
+    public GetScore(ScoreMenu scoreMenu) {
         this.scoreMenu = scoreMenu;
     }
 
-    @Override
-    protected void onPreExecute() {
-    }
-
+    /**
+     * S'execute en tâche de fond
+     * @param params : paramètres de l'url
+     * @return : reponse de la requête
+     */
     @Override
     protected Object doInBackground(Object[] params) {
 
         try {
+            // protocole http : connexion au serveur
             url = new URL(URL_SCORE+""+parametre);
             Log.v("url", ""+url.toString());
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
+            connection = (HttpURLConnection) url.openConnection(); //ouvre la connexion
+            connection.setRequestMethod("GET"); //type de méthode de récupération dans le php
+            connection.connect(); //connexion au serveur
 
-            int responseCode = connection.getResponseCode();
+            int responseCode = connection.getResponseCode(); //doit valoir 200 pour être ok
 
             if(responseCode == HttpURLConnection.HTTP_OK){
                 Log.v("SendScore", "reponse ok");
                 String response = "";
                 String line;
 
+                //va lire la réponse du serveur pour la mettre dans la variable "response"
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                 while((line = br.readLine()) != null){
                     response += line;
                 }
-                return parseJson(response);
+                return parseJson(response); //on décode le json grâce à la méthode parseJson
             }
 
         } catch (MalformedURLException e) {
@@ -82,9 +91,14 @@ public class GetScore extends AsyncTask{
         return null;
     }
 
+    /**
+     * S'execute après doInBackground
+     * @param params : reponse donnée par "doInBackground"
+     */
     @Override
     protected void onPostExecute(Object params){
 
+        //si la réponse du serveur est null, on ne change pas les valeurs
         if(params == null){
             scoreMenu.getFacileValue().setText("-");
             scoreMenu.getMoyenValue().setText("-");
@@ -137,9 +151,15 @@ public class GetScore extends AsyncTask{
     public ArrayList<String> parseJson(String resultat){
         ArrayList<String>listeScore = new ArrayList<>();
         try {
+
+            //on crée l'objet json
             JSONObject object = new JSONObject(resultat);
+
+            //challenge à partir du premier objet ("object") construit qui permet d'être parcouru
             JSONObject challenge = object.getJSONObject("challenge");
             JSONObject limitless = object.getJSONObject("limitless");
+
+            //et ainsi de suite...
 
             //challenge
             String cScoreF = challenge.getJSONObject("facile").getString("score");
@@ -151,6 +171,7 @@ public class GetScore extends AsyncTask{
             String lScoreM = limitless.getJSONObject("moyen").getString("score");
             String lScoreD = limitless.getJSONObject("difficile").getString("score");
 
+            //on ajoute tout dans la liste...
             listeScore.add(cScoreF);
             listeScore.add(cScoreM);
             listeScore.add(cScoreD);
@@ -162,7 +183,7 @@ public class GetScore extends AsyncTask{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return listeScore;
+        return listeScore; //...qu'on retourne pour que onPostExecute l'ait
     }
 
     public void setParametre(String id){
