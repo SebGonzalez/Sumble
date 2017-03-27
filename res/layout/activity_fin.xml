@@ -93,9 +93,10 @@
             android:ems="10"
             android:id="@+id/entrerNum"
             android:hint="@string/entrerNum"
+            android:layout_marginTop="28dp"
             android:layout_below="@+id/retourMenu"
-            android:layout_alignStart="@+id/votreScore"
-            android:layout_marginTop="22dp" />
+            android:layout_alignStart="@+id/retourMenu"
+            android:layout_toStartOf="@+id/envoyer" />
 
     </RelativeLayout>
 

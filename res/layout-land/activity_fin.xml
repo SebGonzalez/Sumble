@@ -44,24 +44,16 @@
         android:layout_below="@+id/titre"
         android:background="@color/backgroundBleuFonce">
 
-        <EditText
-            android:layout_width="wrap_content"
+        <Button
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
+            android:id="@+id/retourMenu"
+            android:background="@drawable/backgroundbuttonjaune"
+            android:layout_marginRight="30dp"
+            android:text="@string/retourMenu"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="160dp"
-            android:id="@+id/entrerNum"
-            android:hint="@string/entrerNum" />
-
-        <Button
-            android:text="@string/envoyer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/envoyer"
-            android:layout_alignTop="@+id/entrerNum"
-            android:layout_alignEnd="@+id/retourMenu" />
+            android:layout_marginBottom="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,8 +62,8 @@
             android:textSize="18sp"
             android:textColor="@android:color/black"
             tools:text="@string/votreScore"
-            android:layout_above="@+id/entrerNum"
-            android:layout_alignStart="@+id/retourMenu" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
         <TextView
             android:text="TextView"
@@ -81,18 +73,26 @@
             android:textSize="30sp"
             android:textColor="@color/jaune"
             android:textAlignment="center"
-            android:layout_alignBottom="@+id/envoyer"
-            android:layout_toStartOf="@+id/entrerNum"
-            android:layout_marginEnd="45dp" />
+            android:layout_below="@+id/votreScore"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/entrerNum"
+            android:hint="@string/entrerNum"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/votreScore" />
 
         <Button
-            android:layout_width="match_parent"
+            android:text="@string/envoyer"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/retourMenu"
-            android:background="@drawable/backgroundbuttonjaune"
-            android:layout_marginRight="30dp"
-            android:text="@string/retourMenu"
-            android:layout_centerVertical="true"
+            android:id="@+id/envoyer"
+            android:layout_alignBottom="@+id/entrerNum"
             android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
