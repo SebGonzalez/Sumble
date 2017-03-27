@@ -21,6 +21,7 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Random;
 
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
@@ -398,27 +399,23 @@ public class SurfaceViewIExpert extends SurfaceView implements SurfaceHolder.Cal
         //On trie la liste d'index décroissante
         Collections.sort(bulleTouche, Collections.reverseOrder());
 
-        int e=0;
         //pour chaque bulle on supprime dans la liste à l'écran celle qui correspondent à la couleur de celle touché
+        ListIterator<Bulle> iterator = bulleFactory.getListeBulle().listIterator();
         for(int i=0; i<bulleTouche.size(); i++) {
-            while(e<bulleFactory.getListeBulle().size()) {
-                if(bulleTouche.get(i).getCouleur() == bulleFactory.getListeBulle().get(e).getCouleur()) {
-                    bulleFactory.getListeBulle().remove(e);
-                    e=0;
+            while(iterator.hasNext()) {
+                if(bulleTouche.get(i).getCouleur() == iterator.next().getCouleur()) {
+                    iterator.remove();
                 }
-                else
-                    e++;
             }
+            iterator = bulleFactory.getListeBulle().listIterator();
         }
 
-        int z=0;
-        while(z<bulleFactory.getListeBulle().size()) {
-            if(bulleFactory.getListeBulle().get(z).getCouleur() == 0) {
-                bulleFactory.getListeBulle().remove(z);
-                z=0;
+        //si les bulles sont de couleur 0 (celle que l'utilisateur aurait du toucher) on les vire sans pression
+        ListIterator<Bulle> iterator2 = bulleFactory.getListeBulle().listIterator();
+        while(iterator2.hasNext()) {
+            if(iterator2.next().getCouleur() == 0) {
+                iterator2.remove();
             }
-            else
-                z++;
         }
 
         if(bulleTouche.get(0).getCouleur() != 0) {
