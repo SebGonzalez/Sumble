@@ -46,11 +46,6 @@ public class GetScore extends AsyncTask{
 
     @Override
     protected void onPreExecute() {
-
-        /*chargement = new ProgressDialog(scoreMenu.getContext());
-        chargement.setTitle("Chargement des données");
-        chargement.setMessage("Veuillez patienter");
-        chargement.show();*/
     }
 
     @Override

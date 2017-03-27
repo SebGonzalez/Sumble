@@ -66,27 +66,13 @@ public class FinActivity extends AppCompatActivity {
         scoreFin.setText(score.getValeur()+"");
 
         if(isOnline()){
-            envoyerScore();
+            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                envoyerScore(getUniqueID());
             cptSend ++;
             isSend = true;
         }else{
             Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
-
-
-        int permissionCheck = ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_SMS);
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-                showExplanation("Permission Needed", "Rationale", Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
-            } else {
-                requestPermission(Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
-            }
-        } else {
-            Toast.makeText(FinActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
-            envoyerScoreSMS();
-        }
-        //envoyerScoreSMS();
 
         entrerNum = (EditText)findViewById(R.id.entrerNum);
 
@@ -94,7 +80,17 @@ public class FinActivity extends AppCompatActivity {
         envoyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                envoyerScoreSMS(entrerNum.getText().toString());
+                int permissionCheck = ActivityCompat.checkSelfPermission(FinActivity.this,Manifest.permission.READ_SMS);
+
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(FinActivity.this, Manifest.permission.READ_SMS)) {
+                        showExplanation("Permission", "Vous devez accepter pour envoyer votre score par message", Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
+                    } else {
+                        requestPermission(Manifest.permission.READ_SMS, MY_PERMISSIONS_REQUEST_READ_SMS);
+                    }
+                } else {
+                    envoyerScoreSMS(entrerNum.getText().toString());
+                }
             }
         });
     }
@@ -103,7 +99,8 @@ public class FinActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         if(isOnline() && cptSend==0){
-            envoyerScore();
+            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+                envoyerScore(getUniqueID());
             Toast.makeText(this, "Le score a été envoyé", Toast.LENGTH_SHORT).show();
             cptSend ++;
             isSend = true;
@@ -121,11 +118,10 @@ public class FinActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(numero);
         boolean numOk = matcher.matches();
         if(numOk) {
-            Toast.makeText(this, "sms en cours d'envoi !", Toast.LENGTH_SHORT).show();
             com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
             settings.setUseSystemSending(true);
             Transaction transaction = new Transaction(this, settings);
-            Message message = new Message("test", numero);
+            Message message = new Message("Je viens d'effectuer " + score.getValeur() + " à Sumble !", numero);
             transaction.sendNewMessage(message, 0);
             Toast.makeText(this, "SMS envoyé au : " + numero, Toast.LENGTH_SHORT).show();
         }else {
@@ -133,12 +129,9 @@ public class FinActivity extends AppCompatActivity {
         }
     }
 
-    public void envoyerScore(){
+    public void envoyerScore(String id){
         SendScore sendScore = new SendScore(this);
-        String id = getIntent().getStringExtra("id");
-        Log.v("sendScore diff", ""+score.getTypeDifficulte().toString());
         sendScore.setParametre(""+score.getValeur(), ""+score.getTypeDifficulte().toString(), id, score.getMode());
-        Log.v("score exec", score.toString());
         sendScore.execute();
     }
 
@@ -153,11 +146,10 @@ public class FinActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_SMS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(FinActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
-                    envoyerScoreSMS();
+                    envoyerScoreSMS(entrerNum.getText().toString());
 
                 } else {
-                    Toast.makeText(FinActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FinActivity.this, "Vous devez accepter pour envoyer votre score par message !", Toast.LENGTH_SHORT).show();
                 }
         }
     }
@@ -176,6 +168,17 @@ public class FinActivity extends AppCompatActivity {
 
     private void requestPermission(String permissionName, int permissionRequestCode) {
         ActivityCompat.requestPermissions(this, new String[]{permissionName}, permissionRequestCode);
+    }
+
+    public String getUniqueID(){
+        String myAndroidDeviceId = "";
+        TelephonyManager mTelephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (mTelephony.getDeviceId() != null){
+            myAndroidDeviceId = mTelephony.getDeviceId();
+        }else{
+            myAndroidDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
+        return myAndroidDeviceId;
     }
 
 }

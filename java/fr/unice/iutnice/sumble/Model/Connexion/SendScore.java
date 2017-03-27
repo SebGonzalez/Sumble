@@ -18,6 +18,9 @@ import fr.unice.iutnice.sumble.View.GameActivity;
  * Created by Gabriel on 15/03/2017.
  */
 
+/**
+ * Classe qui gère l'envoie de score
+ */
 public class SendScore extends AsyncTask{
 
     private static final String URL_SCORE = "http://sebenforce.alwaysdata.net/projet_android/ajouter_score.php?";
@@ -31,23 +34,36 @@ public class SendScore extends AsyncTask{
 
     private FinActivity finActivity;
 
+    /**
+     * Constructeur
+     * @param finActivity
+     */
     public SendScore(FinActivity finActivity){
         this.finActivity = finActivity;
     }
 
+    /**
+     * Fonction qui est appelé avant que la tâche soit effectué
+     */
     @Override
     protected void onPreExecute() {
-
+        //on affiche un chargement avant le début de l'envoie
         chargement = new ProgressDialog(finActivity);
         chargement.setTitle("Envoi du score");
         chargement.setMessage("Veuillez patienter");
         chargement.show();
     }
 
+    /**
+     * Méthode travaillant en arrière plan
+     * @param params
+     * @return
+     */
     @Override
     protected Object doInBackground(Object[] params) {
 
         try {
+            //on appelle le fichier php et on passe en paramètre le score
             url = new URL(URL_SCORE+""+parametre);
             Log.v("url", ""+url.toString());
             connection = (HttpURLConnection) url.openConnection();
@@ -58,7 +74,6 @@ public class SendScore extends AsyncTask{
 
             if(responseCode == HttpURLConnection.HTTP_OK){
                 Log.v("SendScore", "reponse ok");
-
             }
 
         } catch (IOException e) {

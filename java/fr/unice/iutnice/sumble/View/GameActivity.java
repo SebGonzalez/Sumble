@@ -1,6 +1,7 @@
 package fr.unice.iutnice.sumble.View;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,19 +28,25 @@ public class GameActivity extends Activity {
         String mode = getIntent().getStringExtra("mode");
         difficulte = getIntent().getParcelableExtra("difficulte");
 
-        String id = getIntent().getStringExtra("id");
-
         if(difficulte.equals(TypeDifficulte.Facile)) {
-            surfaceDebutant = new SurfaceViewDebutant(this, mode, id);
+            surfaceDebutant = new SurfaceViewDebutant(this, mode);
             setContentView(surfaceDebutant);
         }
         else if(difficulte.equals(TypeDifficulte.Moyen)) {
-            surfaceIntermediaire = new SurfaceViewIntermediaire(this, mode, id);
+            surfaceIntermediaire = new SurfaceViewIntermediaire(this, mode);
             setContentView(surfaceIntermediaire);
         }
         else {
-            surfaceExpert = new SurfaceViewIExpert(this, mode, id);
+            surfaceExpert = new SurfaceViewIExpert(this, mode);
             setContentView(surfaceExpert);
+        }
+
+        Log.v("test", "test" + getResources().getConfiguration().orientation);
+        if(getResources().getConfiguration().orientation == 1) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
     }

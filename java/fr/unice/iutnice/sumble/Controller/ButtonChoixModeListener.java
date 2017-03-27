@@ -22,7 +22,6 @@ public class ButtonChoixModeListener implements View.OnClickListener {
 
     private GameMenu gameMenu;
 
-
     public ButtonChoixModeListener(GameMenu gameMenu){
         this.gameMenu = gameMenu;
     }

@@ -79,20 +79,8 @@ public class GameMenu extends Fragment {
 
     private boolean limitlessChoisi;
     private TypeDifficulte checkedDiff;
-    private String id;
 
     private MediaPlayer mPlayer = null;
-
-    public final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
-
-    public static GameMenu newInstance(String id) {
-
-        Bundle args = new Bundle();
-        GameMenu fragment = new GameMenu();
-        args.putString("id", id);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -180,9 +168,6 @@ public class GameMenu extends Fragment {
             }
         }
 
-        savedInstanceState = getArguments();
-        id = savedInstanceState.getString("id");
-
         return view;
     }
 
@@ -266,7 +251,7 @@ public class GameMenu extends Fragment {
     }
 
     public void setButtonStartListener(){
-        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff, id);
+        ButtonStartListener buttonStartListener = new ButtonStartListener(this, checkedDiff);
         lancerPartie.setOnClickListener(buttonStartListener);
     }
 
