@@ -1,7 +1,6 @@
 package fr.unice.iutnice.sumble.View.SurfaceView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,10 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -22,15 +18,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.Collections;
 import java.util.ListIterator;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import fr.unice.iutnice.sumble.Controller.BulleFactory;
 import fr.unice.iutnice.sumble.Controller.ConversionDpPixel;
@@ -43,21 +36,20 @@ import fr.unice.iutnice.sumble.R;
 import fr.unice.iutnice.sumble.View.FinActivity;
 import fr.unice.iutnice.sumble.View.GameActivity;
 
-import static android.R.attr.id;
-import static android.R.attr.max;
-import static android.R.attr.x;
-import static android.R.attr.y;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static fr.unice.iutnice.sumble.R.drawable.bulle;
-
 /**
  * Created by gonzo on 07/03/2017.
  */
 
 public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Callback, iNiveau, iSon {
 
-    private final int GENERATION_BULLE = 350;
-    private final int VITESSE_DEPLACEMENT = 1;
+    /*************** PARAMETRE DU JEU **********************/
+    private final int MAX_GENERATION_BULLE = 100;
+    private final int GENERATION_BULLE = 20;
+    private final int VITESSE_DEPLACEMENT = 5;
+    private final int COUP_MIN = 2;
+    private final int COUP_MAX = 5;
+    private final int MAX_VALEUR = 20;
+    /********************************************************/
 
     // Le holder
     SurfaceHolder mSurfaceHolder;
@@ -162,7 +154,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
 
         //nombre coup
         if(mode.equals("Challenge"))
-            canvas.drawText(""+nombreCoup.get(0),  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
+            canvas.drawText(""+(nombreCoup.get(0)-bulleTouche.size()),  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
         else
             canvas.drawText("∞",  metrics.widthPixels-ConversionDpPixel.dpToPx(40) ,  ConversionDpPixel.dpToPx(45)- ((paint.descent() + paint.ascent()) / 2), paint);
         canvas.drawText(mode,  metrics.widthPixels/2 ,  ConversionDpPixel.dpToPx(15)- ((paint.descent() + paint.ascent()) / 2), paint);
@@ -199,7 +191,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     public void genererBulle() {
 
             Random random = new Random();
-            int y = random.nextInt(5000);
+            int y = random.nextInt(MAX_GENERATION_BULLE);
             //si la valeur random est inférieur à la constante
             if (y < GENERATION_BULLE) {
                 //on définit une valeur random de la largeur de la bulle et de la position en x
@@ -309,7 +301,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     public int definirNombreCoup() {
         Random r = new Random();
         //valeur random entre 2 et 5
-        int nbCoup = r.nextInt(5 - 2) + 2;
+        int nbCoup = r.nextInt(COUP_MAX - COUP_MIN) + COUP_MIN;
 
         //on vérifie que le nombre de coup n'est pas supérieur à la valeur à atteindre (sinon forcément y'a un soucis quoi)
         if (nbCoup < valeurAAtteindre.get(valeurAAtteindre.size() - 1)) {
@@ -348,7 +340,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     public int definirValeurAAtteindre() {
         //on définit une valeur entre 1 et 20
         Random r = new Random();
-        int valeur = r.nextInt(20)+1;
+        int valeur = r.nextInt(MAX_VALEUR)+1;
         //si la liste n'est pas vide
         if(!valeurAAtteindre.isEmpty()) {
             //on vérifie que la valeur généré n'est pas la même que celle généré précédemment
@@ -397,6 +389,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                         playSound(R.raw.eclatement);
                         //on appel la fonction qui gère les points
                         verifPoint();
+
                         //on sort de la boucle (on peut pas toucher deux bulles en même temps ça serait fou)
                         break;
                     }
@@ -427,12 +420,14 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                 fin = true;
         }
         //sinon si la somme vaut pile poile la valeur à atteindre (tout n'est pas encore gagné)
-        else if(mode.equals("challenge")) {
-            if (sommeBulleTouche == valeurAAtteindre.get(0) && bulleTouche.size() == nombreCoup.get(0)) {
+        else if(mode.equals("Challenge")) {
+            //si la somme vaut pile poile la valeur à atteindre et qu'on a touché le bon nombre de boule on a gagné
+            if (sommeBulleTouche == valeurAAtteindre.get(0) && bulleTouche.size() == nombreCoup.get(0) && verifBulleToucheMemeCouleur()) {
                 playSound(R.raw.oui);
                 score += sommeBulleTouche;
                 supprimerBulleOutDated();
                 bulleTouche.clear();
+                //si la somme vaut pile poile la valeur à atteindre et qu'on a pas touché le bon nombre de boule on a perdu
             } else if (sommeBulleTouche() == valeurAAtteindre.get(0) && bulleTouche.size() != nombreCoup.get(0)) {
                 playSound(R.raw.erreur);
                 score -= sommeBulleTouche;
@@ -440,7 +435,8 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
                 bulleTouche.clear();
                 if (score < -50)
                     fin = true;
-            } else if (sommeBulleTouche() <= valeurAAtteindre.get(0) && bulleTouche.size() > nombreCoup.get(0)) {
+                //si la somme est inférieur la valeur à atteindre et qu'on a touché trop de bulle c'est perdu aussi
+            } else if (sommeBulleTouche() <= valeurAAtteindre.get(0) && bulleTouche.size() >= nombreCoup.get(0)) {
                 playSound(R.raw.erreur);
                 score -= sommeBulleTouche;
                 supprimerBulleOutDated();
@@ -487,7 +483,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     /**
      * Fonction qui supprime les bulles qui ne doivent plus être là (ne pas lire si vous ne voulez pas avoir une attaque cardiaque, âme sensible s'abstenir)
      */
-    public synchronized void supprimerBulleOutDated() {
+    public void supprimerBulleOutDated() {
         //On trie la liste d'index décroissante
         Collections.sort(bulleTouche, Collections.reverseOrder());
         String s = "";
@@ -693,6 +689,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     public void playSound(int resId) {
         if(mPlayer != null) {
             mPlayer.stop();
+            mPlayer.reset();
             mPlayer.release();
         }
         mPlayer = MediaPlayer.create(this.getContext(), resId);
@@ -706,6 +703,7 @@ public class SurfaceViewDebutant extends SurfaceView implements SurfaceHolder.Ca
     public void playSoundLoop(int resId) {
         if(mPlayerFond != null) {
             mPlayerFond.stop();
+            mPlayerFond.reset();
             mPlayerFond.release();
         }
         mPlayerFond = MediaPlayer.create(this.getContext(), resId);

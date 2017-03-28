@@ -57,7 +57,7 @@ public class Bulle implements Comparable {
         y = ConversionDpPixel.dpToPx(60);
 
         //assignation de l'image
-        final Bitmap bitmap =  BitmapFactory.decodeResource(c.getResources(), R.drawable.bulle);
+        final Bitmap bitmap =  BitmapFactory.decodeResource(c.getResources(), R.drawable.bulle3);
         img = Bitmap.createScaledBitmap(bitmap,largeur,largeur, false);
 
     }

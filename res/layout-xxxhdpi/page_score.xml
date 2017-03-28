@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundBleuFonce">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeRefresh">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
+                android:background="@drawable/backgroundscore"
+                android:id="@+id/relativeLayout"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="@string/scores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/titreScore"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:textColor="@color/noir"
+                    android:background="@color/jaune"
+                    android:padding="5dp" />
+
+                <TextView
+                    android:text="@string/bestScoreMondiaux"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    tools:ignore="NotSibling"
+                    android:textSize="18sp"
+                    android:textColor="@color/noir"
+                    android:background="@color/jaune"
+                    android:padding="5dp"
+                    android:layout_below="@+id/relativeLayout3"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:text="@string/bestScorePerso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView4"
+                    tools:ignore="NotSibling"
+                    android:textSize="18sp"
+                    android:textColor="@color/noir"
+                    android:background="@color/jaune"
+                    android:layout_below="@+id/titreScore"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="25dp"
+                    android:padding="5dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@+id/textView4"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/relativeLayout3">
+
+                    <TextView
+                        android:text="@string/intermediaire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/facileScore"
+                        tools:ignore="NotSibling"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true"
+                        android:textColor="@color/noir"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:text="@string/difficile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/relativeLayout"
+                        android:layout_alignStart="@+id/relativeLayout"
+                        android:layout_marginTop="108dp"
+                        android:id="@+id/moyenScore"
+                        tools:ignore="NotSibling"
+                        android:textColor="@color/noir"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:text="@string/facile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="23dp"
+                        android:id="@+id/difficileScore"
+                        tools:ignore="NotSibling"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:textColor="@color/noir"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/moyenValue"
+                        tools:ignore="NotSibling"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce"
+                        android:layout_alignBottom="@+id/facileScore"
+                        android:layout_alignStart="@+id/facileValue" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/difficileValue"
+                        tools:ignore="NotSibling"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce"
+                        android:layout_alignBottom="@+id/moyenScore"
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/facileValueL"
+                        android:layout_alignBottom="@+id/facileValue"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="33dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/difficileValueL"
+                        android:layout_alignBottom="@+id/difficileValue"
+                        android:layout_alignStart="@+id/moyenValueL"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/moyenValueL"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce"
+                        android:layout_alignBaseline="@+id/moyenValue"
+                        android:layout_alignBottom="@+id/moyenValue"
+                        android:layout_alignStart="@+id/facileValueL" />
+
+                    <TextView
+                        android:text="@string/challenge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView14"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir" />
+
+                    <TextView
+                        android:text="@string/limitless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView16"
+                        android:textSize="16sp"
+                        android:textAlignment="viewStart"
+                        android:textColor="@color/noir"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="15dp" />
+
+                    <TextView
+                        android:text="text "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/facileValue"
+                        tools:ignore="NotSibling"
+                        android:textSize="16sp"
+                        android:textColor="@color/noir"
+                        android:padding="3dp"
+                        android:background="@color/backgroundBleuFonce"
+                        android:layout_alignBaseline="@+id/difficileScore"
+                        android:layout_alignBottom="@+id/difficileScore"
+                        android:layout_alignStart="@+id/difficileValue" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/textView3"
+                    android:layout_margin="10dp"
+                    android:layout_height="200dp">
+
+                    <android.support.v4.view.ViewPager
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/modes">
+                        <android.support.v4.view.PagerTabStrip
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+                    </android.support.v4.view.ViewPager>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</RelativeLayout>

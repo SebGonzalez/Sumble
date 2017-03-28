@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
@@ -45,9 +48,10 @@ public class FinActivity extends AppCompatActivity {
     private boolean isSend;
     private int cptSend=0;
     private Button envoyer;
-    private EditText entrerNum;
+
 
     public final int MY_PERMISSIONS_REQUEST_READ_SMS = 1;
+    private final int PICK_CONTACT_REQUEST = 1;
 
     /**
      * Creation de la vue
@@ -83,7 +87,6 @@ public class FinActivity extends AppCompatActivity {
             Toast.makeText(this, "Vous devez être connecté à internet pour envoyer votre score", Toast.LENGTH_SHORT).show();
         }
 
-        entrerNum = (EditText)findViewById(R.id.entrerNum);
 
         envoyer = (Button)findViewById(R.id.envoyer);
         //on peut envoyer son score au numéro entré dans l'EditText
@@ -101,7 +104,7 @@ public class FinActivity extends AppCompatActivity {
                     }
                 } else {
                     //si elles sont acceptées, on peut envoyer le score par message
-                    envoyerScoreSMS(entrerNum.getText().toString());
+                    pickContact();
                 }
             }
         });
@@ -138,22 +141,14 @@ public class FinActivity extends AppCompatActivity {
         //pour envoyer un SMS, nous avons utilisé une libraire appelée klinker send_message
 
         //expression régulière pour vérifier qu'il s'agit bien d'un numéro de téléphone
-        Pattern pattern = Pattern.compile("(\\+[0-9]{3}( [0-9][0-9])+)|([0-9]+)");
-        Matcher matcher = pattern.matcher(numero);
-        boolean numOk = matcher.matches();
 
-        if(numOk) {
-            //si c'est un numéro correct...
-            com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
-            settings.setUseSystemSending(true);
-            Transaction transaction = new Transaction(this, settings);
-            Message message = new Message("Je viens d'effectuer " + score.getValeur() + " à Sumble !", numero);
-            transaction.sendNewMessage(message, 0);
-            Toast.makeText(this, "SMS envoyé au : " + numero, Toast.LENGTH_SHORT).show();
-        }else {
-            //sinon...
-            Toast.makeText(this, "Veuillez entrer un numéro valide", Toast.LENGTH_SHORT).show();
-        }
+        com.klinker.android.send_message.Settings settings = new com.klinker.android.send_message.Settings();
+        settings.setUseSystemSending(true);
+        Transaction transaction = new Transaction(this, settings);
+        Message message = new Message("Je viens d'effectuer " + score.getValeur() + " à Sumble !", numero);
+        transaction.sendNewMessage(message, 0);
+        Toast.makeText(this, "SMS envoyé au : " + numero, Toast.LENGTH_SHORT).show();
+
     }
 
     /**
@@ -187,7 +182,7 @@ public class FinActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_SMS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    envoyerScoreSMS(entrerNum.getText().toString());
+                    pickContact();
 
                 } else {
                     Toast.makeText(FinActivity.this, "Vous devez accepter pour envoyer votre score par message !", Toast.LENGTH_SHORT).show();
@@ -220,6 +215,40 @@ public class FinActivity extends AppCompatActivity {
             myAndroidDeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         }
         return myAndroidDeviceId;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request it is that we're responding to
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // Get the URI that points to the selected contact
+                Uri contactUri = data.getData();
+                // We only need the NUMBER column, because there will be only one row in the result
+                String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+                // Perform the query on the contact to get the NUMBER column
+                // We don't need a selection or sort order (there's only one result for the given URI)
+                // CAUTION: The query() method should be called from a separate thread to avoid blocking
+                // your app's UI thread. (For simplicity of the sample, this code doesn't do that.)
+                // Consider using CursorLoader to perform the query.
+                Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null);
+                cursor.moveToFirst();
+
+                // Retrieve the phone number from the NUMBER column
+                int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                String number = cursor.getString(column);
+
+                envoyerScoreSMS(number);
+            }
+        }
+    }
+
+    private void pickContact() {
+        Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
+        pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
+        startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
 }

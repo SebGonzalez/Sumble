@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:background="@color/backgroundBleuFonce"
         android:layout_height="match_parent"
+        tools:ignore="UselessParent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        tools:ignore="UselessParent">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:text="@string/param"
@@ -32,7 +32,9 @@
             android:layout_width="20dp"
             android:layout_alignBottom="@+id/param"
             android:layout_alignParentStart="true"
-            android:background="@drawable/chevronleft" />
+            android:background="@drawable/chevronleft"
+            android:contentDescription=""
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:text="@string/scores"
@@ -43,7 +45,8 @@
             android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/chevronright" />
+            android:layout_toStartOf="@+id/chevronright"
+            tools:ignore="RelativeOverlap" />
 
         <ImageView
             android:layout_width="20dp"
@@ -51,56 +54,16 @@
             android:id="@+id/chevronright"
             android:layout_alignTop="@+id/score"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/chevronright" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:background="@color/backgroundBleuClair"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/titre">
-
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_height="100dp"
-                android:background="@drawable/logo"
-                android:layout_width="130dp"
-                android:layout_above="@+id/modeJeuTitre"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:text="@string/modeDeJeuTitre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/modeJeuTitre"
-                android:textSize="20sp"
-                android:textColor="@android:color/black"
-                android:textAlignment="center"
-                android:background="@color/jaune"
-                android:fontFamily="Calibri"
-                android:padding="5dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
-
-            <Button
-                android:text="2joueurs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="21dp"
-                android:layout_marginTop="26dp"
-                android:id="@+id/deuxJoueur" />
-
-        </RelativeLayout>
+            android:background="@drawable/chevronright"
+            android:contentDescription=""
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/titre"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/buttons">
 
             <Button
@@ -125,6 +88,17 @@
                 android:layout_alignStart="@+id/limitless"
                 android:textSize="24sp"
                 android:textAllCaps="false" />
+
+            <ImageView
+                android:id="@+id/infosMode"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/info2"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/limitless"
+                android:layout_marginStart="14dp"
+                android:contentDescription=""
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
@@ -155,7 +129,8 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
-                android:id="@+id/radiogroup">
+                android:id="@+id/radiogroup"
+                tools:ignore="RelativeOverlap">
 
                 <RadioButton
                     android:text="@string/facile"
@@ -191,7 +166,44 @@
                 android:layout_height="30dp"
                 android:layout_alignBottom="@+id/difficulte"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/info" />
+                android:background="@drawable/info"
+                android:adjustViewBounds="false"
+                tools:ignore="ContentDescription,ObsoleteLayoutParam"
+                android:contentDescription="" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/backgroundBleuClair"
+            android:id="@+id/titre"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_height="120dp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_height="100dp"
+                android:background="@drawable/logo"
+                android:layout_width="130dp"
+                android:layout_above="@+id/modeJeuTitre"
+                android:layout_centerHorizontal="true"
+                android:contentDescription=""
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:text="@string/modeDeJeuTitre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/modeJeuTitre"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"
+                android:textAlignment="center"
+                android:background="@color/jaune"
+                android:fontFamily="Calibri"
+                android:padding="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
 
         </RelativeLayout>
 
